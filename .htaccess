@@ -1,0 +1,18 @@
+#
+
+# Options -Indexes
+# RewriteBase /
+
+RewriteEngine On
+
+# RewriteCond %{REQUEST_FILENAME} ^~
+# RewriteRule ^~(.*)$ $1 [QSA,S=1,L]
+
+# RewriteCond %{REQUEST_URI} ^/~ [NC]
+# RewriteRule ^~(.*)$ $1 [QSA,L]
+
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/static* [NC]
+RewriteCond %{REQUEST_URI} !^/files* [NC]
+RewriteRule ^(.+)$ index.php [QSA,L]
