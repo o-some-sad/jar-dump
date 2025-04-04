@@ -16,3 +16,11 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/static* [NC]
 RewriteCond %{REQUEST_URI} !^/files* [NC]
 RewriteRule ^(.+)$ index.php [QSA,L]
+
+
+<IfModule mod_headers.c>
+  # Disable caching for all files
+  Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+  Header set Pragma "no-cache"
+  Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+</IfModule>

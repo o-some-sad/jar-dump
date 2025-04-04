@@ -2,9 +2,9 @@
 
 # some configuration needs to be done to be able to run this project properly 
 
-1. enable rewrite module for apache2
+1. enable rewrite and headers module for apache2
 ```sh
-sudo a2enmod rewrite
+sudo a2enmod rewrite headers
 sudo systemctl restart apache2 # apply the changes
 ```
 
