@@ -15,6 +15,9 @@ switch ($request) {
         protect();
         require __DIR__ . '/views/index.php';
         break;
+    case '/login':
+        require __DIR__ . '/views/login.php';
+        break;
     default:
         // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
         //     $_REQUEST["PARAMS"] = array_slice($match, 1);
