@@ -14,6 +14,7 @@ function layout_open(string $title) {
 }
 
 function layout_close(){
+    echo '<script type="module" src="/static/alpine-components.js"></script>';
     echo '<script defer src="/static/alpine.js"></script>';
     echo 
     '</body>

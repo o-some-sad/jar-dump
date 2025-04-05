@@ -10,13 +10,15 @@ document.querySelectorAll("template[x-component]").forEach((template) => {
                 this.setAttribute(attr, template.getAttribute(attr));
             });
 
+            if(template.content.children.length > 1){
+                console.warn("template has more than one root element, please consider make it only single element")
+            }
+            
+
             const shadowRoot = this.attachShadow({
                 mode: "open",
             });
             shadowRoot.appendChild(template.content.cloneNode(true));
-            const script = document.createElement("script");
-            script.src = "/static/alpine.js";
-            shadowRoot.appendChild(script);
             Alpine.initTree(shadowRoot);
         }
         data() {
