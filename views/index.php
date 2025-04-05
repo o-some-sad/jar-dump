@@ -6,10 +6,13 @@ require_once 'components/layout.php';
 
 <?= layout_open("Home"); ?>
 
-<template x-component="styled-button" x-data="{label: 'mamma'}">
-    <button>
-        <slot></slot>
-    </button>
+<template x-component="styled-button">
+    <span x-data="{label: 'hello world'}">
+        <label x-text="label"></label>
+        <button>
+            <slot></slot>
+        </button>
+    </span>
 </template>
 
 
@@ -17,17 +20,13 @@ require_once 'components/layout.php';
 
 <main x-data="{real: 0}">
     <center>
-    <h1>Congratulations, You made it</h1>
+        <h1>Congratulations, You made it</h1>
     </center>
     <br><br><br><br>
     <div>
         <button @click="$store.main.greet()" @click="count++" x-html="`count is ${$store.main.count}`" x-cloak></button>
         <styled-button @click="real++" x-text="`real is ${real}`" />
     </div>
-
-        
-   
-
 </main>
 
 <script>
@@ -45,5 +44,4 @@ require_once 'components/layout.php';
     })
 </script>
 
-<script type="module" src="/static/alpine-components.js"></script>
 <?= layout_close(); ?>
