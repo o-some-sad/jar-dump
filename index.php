@@ -4,19 +4,30 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-function protect() {
-    //middleware logic will be placed here
-}
+//TODO: discuss using namespaces
+require_once "middlewares/auth.php";
+require_once "utils/debug.php";
+require_once "utils/http.php";
+require_once "utils/env.php";
+
 
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$method = $_SERVER["REQUEST_METHOD"];
+
+loadEnv();
+session_start();
+
+
 switch ($request) {
     case '/':
     case '':
-        protect();
+        Auth::protect();
         require __DIR__ . '/views/index.php';
         break;
     case '/login':
-        require __DIR__ . '/views/login.php';
+        if($method == "GET") require __DIR__ . '/views/login.php';
+        else if($method == "POST") require __DIR__ . '/handlers/login.handler.php';
+        else notFound();
         break;
     default:
         // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
@@ -24,7 +35,6 @@ switch ($request) {
         //     require __DIR__ . "/views/edit.php";
         //     break;
         // }
-        http_response_code(404);
-        require __DIR__ . '/views/404.php';
+        notFound();
         break;
 }
