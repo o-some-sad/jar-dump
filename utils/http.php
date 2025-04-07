@@ -7,6 +7,11 @@ function notFound() {
     exit;
 }
 
+function redirect($to, $status = 302){
+    header("Location: $to", true, $status);
+    exit;
+}
+
 
 // class Router
 // {

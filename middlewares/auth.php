@@ -30,10 +30,15 @@ class User{
 class Auth
 {
     static private bool $is_request_protected = false;
-    static private User | null $current_user = null;
+    static private User | array | null $current_user = null;
     static private function  preventAccess(string $message = "Your'e not allowed here"){
         echo $message;
         exit;
+    }
+
+    static function isAuthed(){
+        // (value of logged_in is present and equals true)
+        return (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true);
     }
 
     /**
@@ -41,7 +46,7 @@ class Auth
      */
     static function protect(array | null $roles = null)
     {
-        if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] != true){
+        if(!static::isAuthed()){
             static::preventAccess();
         }
         if(!isset($_SESSION['user'])){
@@ -64,6 +69,5 @@ class Auth
     static function getUser(): User{
         if(static::$is_request_protected)return static::$current_user;
         throw new Exception("cannot retrieve user without protected route", 1);
-        
     }
 }

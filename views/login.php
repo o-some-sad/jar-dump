@@ -10,6 +10,7 @@ require_once "utils/validator.php";
 <?= layout_open("Login") ?>
 
 <form method="post">
+    <?= $errors['_'] ?? "" ?>
     <label>
         Email
         <input value="<?= $values["email"] ?? "" ?>" type="email" name="email" placeholder="Email">
