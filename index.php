@@ -17,6 +17,36 @@ $method = $_SERVER["REQUEST_METHOD"];
 loadEnv();
 session_start();
 
+function matchRoute($route, $path)
+{
+    $path = rtrim($path, "/");
+    $route = rtrim($route, "/");
+    $escapedRoute = addcslashes($route, "/");
+    $readyPattern = preg_replace("/\{(.*?)\}/", '(?P<$1>[^\/]*)', $escapedRoute);
+    preg_match("/^" . $readyPattern . "$/", $path, $matches);
+    if (is_null($matches)) {
+        notFound();
+        exit;
+    }
+    return $matches;
+}
+
+function userRoutes($request)
+{
+    global $method;
+    $matches =  matchRoute("/dashboard/users/{id}", $request);
+    if ($matches && $method == "GET") {
+        Auth::protect([Role::Admin]);
+        $_REQUEST['params'] = $matches;
+        require __DIR__ . '/views/dashboard/edit_user.php';
+        exit;
+    }
+    $matches = matchRoute("/dashboard/users/{id}/delete", $request);
+    if ($matches && $method == "POST") {
+        require __DIR__ . "/handlers/deleteUser.handler.php";
+        exit;
+    }
+}
 
 switch ($request) {
     case '/':
@@ -25,8 +55,8 @@ switch ($request) {
         require __DIR__ . '/views/index.php';
         break;
     case '/login':
-        if($method == "GET") require __DIR__ . '/views/login.php';
-        else if($method == "POST") require __DIR__ . '/handlers/login.handler.php';
+        if ($method == "GET") require __DIR__ . '/views/login.php';
+        else if ($method == "POST") require __DIR__ . '/handlers/login.handler.php';
         else notFound();
         break;
     case '/dashboard/users':
@@ -34,6 +64,7 @@ switch ($request) {
         require __DIR__ . '/views/dashboard/users.php';
         break;
     default:
+        userRoutes($request);
         // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
         //     $_REQUEST["PARAMS"] = array_slice($match, 1);
         //     require __DIR__ . "/views/edit.php";

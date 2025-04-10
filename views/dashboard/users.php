@@ -8,11 +8,14 @@ $actionsCell = fn($row) => [
     h(
         "a",
         [
-          'href' => "/dashboard/users/{$row['user_id']}"  
+            'href' => "/dashboard/users/{$row['user_id']}"
         ],
         "Edit"
     ),
-    h("button", null, "Delete"),
+    h("form", [
+        'method' => "POST",
+        'action' => "/dashboard/users/{$row['user_id']}/delete"
+    ], h("button", null, "Delete")),
 ];
 $users = array_map(fn($row) => array_merge($row, ['actions' => $actionsCell($row)]), $result['data']);
 

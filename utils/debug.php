@@ -6,3 +6,11 @@ function dd($data)
     die(var_dump($data));
     echo '</pre>';
 }
+
+//only dump
+function od($data)
+{
+    echo '<pre>';
+    var_dump($data);
+    echo '</pre>';
+}
