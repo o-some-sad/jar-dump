@@ -4,17 +4,29 @@ require_once "controllers/user.controller.php";
 require_once "utils/html.php";
 
 $result = UserController::getAllUsers();
-
-$users = $result['data'];
+$actionsCell = fn($row) => [
+    h(
+        "a",
+        [
+          'href' => "/dashboard/users/{$row['user_id']}"  
+        ],
+        "Edit"
+    ),
+    h("button", null, "Delete"),
+];
+$users = array_map(fn($row) => array_merge($row, ['actions' => $actionsCell($row)]), $result['data']);
 
 $headers = [
+    'user_id' => "ID",
     'name' => 'Name',
-    'profile_picture' => 'Picture'
+    'role' => "Role",
+    'profile_picture' => 'Picture',
+    'actions' => "Actions"
 ];
 
 $render = [
     'profile_picture' => fn($src) => h("img", compact("src"))
-]
+];
 
 ?>
 
@@ -23,10 +35,8 @@ $render = [
 
 <div>
     <h1>All users</h1>
-    <?= renderTable($users, $headers, $render); ?>
     <a href="/dashboard/users/new">Add user</a>
 </div>
-<div>
-</div>
+<?= renderTable($users, $headers, $render); ?>
 
 <?= adminLayout_close(); ?>
