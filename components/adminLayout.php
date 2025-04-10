@@ -15,6 +15,10 @@ function adminLayout_open(string $title) {
     echo '<body>';
     echo '<header>';
     echo "<span>Hello {$user['name']}</span>";
+    echo "<form action='/auth/logout' method='POST'> 
+        <button>Logout</button>
+    </form>";
+    
     echo '</header>';
 }
 

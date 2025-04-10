@@ -57,7 +57,14 @@ switch ($request) {
         break;
     case '/login':
         if ($method == "GET") require __DIR__ . '/views/login.php';
-        else if ($method == "POST") require __DIR__ . '/handlers/login.handler.php';
+        else notFound();
+        break;
+    case '/auth/login':
+        if ($method == "POST") require __DIR__ . '/handlers/login.handler.php';
+        else notFound();
+        break;
+    case '/auth/logout':
+        if($method == "POST") require __DIR__ . '/handlers/logout.handler.php';
         else notFound();
         break;
     case '/dashboard/users':
