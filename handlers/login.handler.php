@@ -1,5 +1,8 @@
 <?php
 require_once "utils/validator.php";
+require_once "utils/pdo.php";
+require_once "utils/http.php";
+
 $validationResult = [
     'email' => validate(
         "email",
@@ -13,4 +16,35 @@ $validationResult = [
 
 $values = handleValidationResult($validationResult, "/login");
 
-dd($values);
+
+try{
+    if(Auth::isAuthed()){
+        //already authed, just redirect
+        redirect($_GET["to"] ?? "/");
+        exit;
+    }
+    $pdo = createPDO();
+
+    $stmt = $pdo->prepare("select user_id, name, email, password, role, profile_picture from users where email = :email and deleted_at is null");
+    $stmt->execute([
+        'email' => $values['email']
+    ]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if(!$user){
+        redirectWithValidationResult($values, ['_' => "Email or password is incorrect"], "/login");
+        exit;
+    }
+    if(!password_verify($values['password'], $user['password'])){
+        redirectWithValidationResult($values, ['_' => "Email or password is incorrect"], "/login");
+        exit;
+    }
+    //! REMOVE PASSWORD FROM USER ARRAY
+    unset($user['password']);
+    $_SESSION['logged_in'] = true;
+    $_SESSION['user'] = $user;
+    redirect($_GET["to"] ?? "/");
+    exit;
+}
+catch(PDOException $e){
+    dd($e);
+}

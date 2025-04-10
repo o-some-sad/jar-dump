@@ -61,16 +61,21 @@ function validateFile(string $name, array | null $allowedExts = null, int | null
     return [true, $file];    
 }
 
-
+/**
+ * use this function if you want to redirect with custom validation errors and values
+ */
+function redirectWithValidationResult(array $values, array $errors, string $redirectTo){
+    $_SESSION["errors"] = $errors;
+    $_SESSION["values"] = $values;
+    header("Location: $redirectTo");
+    exit;
+}
 
 function handleValidationResult($result, $redirectTo) {
     $errors = getValidationErrors($result);
     $values = getValidationValues($result);
     if($errors){
-        $_SESSION["errors"] = $errors;
-        $_SESSION["values"] = $values;
-        header("Location: $redirectTo");
-        exit;
+        redirectWithValidationResult($values, $errors, $redirectTo);
     }
     return $values;
 }
