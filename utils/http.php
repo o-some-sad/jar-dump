@@ -12,6 +12,20 @@ function redirect($to, $status = 302){
     exit;
 }
 
+function matchRoute($route, $path)
+{
+    $path = rtrim($path, "/");
+    $route = rtrim($route, "/");
+    $escapedRoute = addcslashes($route, "/");
+    $readyPattern = preg_replace("/\{(.*?)\}/", '(?P<$1>[^\/]*)', $escapedRoute);
+    preg_match("/^" . $readyPattern . "$/", $path, $matches);
+    if (is_null($matches)) {
+        notFound();
+        exit;
+    }
+    return $matches;
+}
+
 
 // class Router
 // {
