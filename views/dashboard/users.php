@@ -1,6 +1,7 @@
 <?php
 require_once "components/adminLayout.php";
 require_once "controllers/user.controller.php";
+require_once "utils/html.php";
 
 $result = UserController::getAllUsers();
 
