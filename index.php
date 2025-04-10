@@ -12,6 +12,7 @@ require_once "utils/env.php";
 
 
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$request = rtrim($request, "/");
 $method = $_SERVER["REQUEST_METHOD"];
 
 loadEnv();
@@ -62,6 +63,10 @@ switch ($request) {
     case '/dashboard/users':
         Auth::protect([Role::Admin]);
         require __DIR__ . '/views/dashboard/users.php';
+        break;
+    case '/dashboard/users/new':
+        Auth::protect([Role::Admin]);
+        echo "<h1>user registration will be here</h1>";
         break;
     default:
         userRoutes($request);
