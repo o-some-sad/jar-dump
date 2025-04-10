@@ -1,8 +1,10 @@
 <?php
 require_once "head.php";
+require_once "middlewares/auth.php";
 
 
 function adminLayout_open(string $title) {
+    $user = Auth::getUser();
     echo 
     '<!DOCTYPE html>
     <html lang="en">';
@@ -11,7 +13,9 @@ function adminLayout_open(string $title) {
     //write custom head tags here
     head_close();
     echo '<body>';
-    echo '(admin)';
+    echo '<header>';
+    echo "<span>Hello {$user['name']}</span>";
+    echo '</header>';
 }
 
 function adminLayout_close(){

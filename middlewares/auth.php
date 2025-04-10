@@ -17,11 +17,6 @@ enum Role: string
 };
 
 
-//TODO: move this class
-class User{
-    public Role $role = Role::User;
-}
-
 
 
 
@@ -30,7 +25,7 @@ class User{
 class Auth
 {
     static private bool $is_request_protected = false;
-    static private User | array | null $current_user = null;
+    static private array | null $current_user = null;
     static private function  preventAccess(string $message = "Your'e not allowed here"){
         echo $message;
         dd($_SESSION);
@@ -54,7 +49,7 @@ class Auth
             //TODO: log out the user without panic
             throw new Exception('The \'user\' object is not found', 1);
         }
-        /** @var User $user */
+        
         $user = $_SESSION['user'];
         $roles = $roles ? array_map(fn($role)=>$role->value, $roles) : $roles;
         if(!is_null($roles) && !in_array($user['role'], $roles, true)){
@@ -68,7 +63,7 @@ class Auth
 
 
 
-    static function getUser(): User{
+    static function getUser(){
         if(static::$is_request_protected)return static::$current_user;
         throw new Exception("cannot retrieve user without protected route", 1);
     }
