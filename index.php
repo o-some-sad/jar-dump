@@ -29,6 +29,10 @@ switch ($request) {
         else if($method == "POST") require __DIR__ . '/handlers/login.handler.php';
         else notFound();
         break;
+    case '/dashboard/users':
+        Auth::protect([Role::Admin]);
+        require __DIR__ . '/views/dashboard/users.php';
+        break;
     default:
         // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
         //     $_REQUEST["PARAMS"] = array_slice($match, 1);

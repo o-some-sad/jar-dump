@@ -18,7 +18,6 @@ $values = handleValidationResult($validationResult, "/login");
 
 
 try{
-    dd($_SESSION);
     if(Auth::isAuthed()){
         //already authed, just redirect
         redirect($_GET["to"] ?? "/");
