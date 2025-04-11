@@ -52,12 +52,12 @@ function getValidationValues($fields)
 
 function validateFile(string $name, array | null $allowedExts = null, int | null $maxSize = null)
 {
+    // MOVE THE IMAGE FROM TMP TO A PERM. DIR.
     if (!isset($_FILES[$name])) return [false, "File not found"];
     $file = $_FILES[$name];
-    if(empty($file["temp_name"]) || $file["name"] || $file["error"] != 0)[false, "Please make sure that you uploaded the file correctly"];
+    if(empty($file["temp_name"]) || $file["name"] || $file["error"] != 0) return [false, "Please make sure that you uploaded the file correctly"];
     $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
     if (!is_null($allowedExts) && !in_array($ext, $allowedExts))return [false, "File type is not supported"];
-
     return [true, $file];    
 }
 
@@ -90,3 +90,14 @@ function getValidationReturn() {
     unset($_SESSION["values"]);
     return [$errors, $values];
 }
+
+
+function matchingPasswords(string $pass, string $confirmPass){
+    // $errors = [];
+    if($pass !== $confirmPass){
+        return ['password_match' => 'Passwords do not match'];
+    } else{
+        return [];
+    }
+}
+// validate password & confirmPassword

@@ -9,6 +9,7 @@ require_once "middlewares/auth.php";
 require_once "utils/debug.php";
 require_once "utils/http.php";
 require_once "utils/env.php";
+require_once "controllers/user.controller.php";
 
 
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -26,7 +27,7 @@ function userRoutes($request)
     if ($matches && $method == "GET") {
         Auth::protect([Role::Admin]);
         $_REQUEST['params'] = $matches;
-        require __DIR__ . '/views/dashboard/edit_user.php';
+        require __DIR__ . '/views/dashboard/editUser.php';
         exit;
     }
     $matches = matchRoute("/dashboard/users/{id}/delete", $request);
@@ -59,9 +60,18 @@ switch ($request) {
         require __DIR__ . '/views/dashboard/users.php';
         break;
     case '/dashboard/users/new':
-        Auth::protect([Role::Admin]);
-        echo "<h1>user registration will be here</h1>";
+        // Auth::protect([Role::Admin]);
+        // echo "<h1>user registration will be here</h1>";
+        if ($method == "GET") require __DIR__ . '/views/dashboard/createUser.php';
+        // else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
+        else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
+        else notFound();
         break;
+    // case '/users/register':
+    //     if ($method == "POST")
+    //     require __DIR__ . '/views/users/register.php';
+    //     else notFound();
+    //     break;
     default:
         userRoutes($request);
         // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
