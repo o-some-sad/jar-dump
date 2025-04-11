@@ -1,11 +1,11 @@
 <?php
 
 function createPDO(){
-    $host = getenv("DB_HOST");
-    $port = getenv("DB_PORT");
-    $db = getenv("DB_NAME");
-    $user = getenv("DB_USER");
-    $pass = getenv("DB_PASS");
+    $host = DB_HOST;
+    $port = DB_PORT;
+    $db = DB_NAME;
+    $user = DB_USER;
+    $pass = DB_PASS;
 
     $connection = "mysql:host=$host:$port;dbname=$db";
     

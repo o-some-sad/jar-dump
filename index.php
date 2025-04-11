@@ -15,7 +15,8 @@ $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $request = rtrim($request, "/");
 $method = $_SERVER["REQUEST_METHOD"];
 
-loadEnv();
+// loadEnv();
+require_once "config.php";
 session_start();
 
 
