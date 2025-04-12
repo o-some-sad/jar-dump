@@ -71,6 +71,10 @@ function redirectWithValidationResult(array $values, array $errors, string $redi
     exit;
 }
 
+
+/**
+ * handles the result of validation and redirects if there's any errors
+ */
 function handleValidationResult($result, $redirectTo) {
     $errors = getValidationErrors($result);
     $values = getValidationValues($result);
@@ -81,6 +85,12 @@ function handleValidationResult($result, $redirectTo) {
 }
 
 
+/**
+ * NOTE: use this in views to get the validation errors and values
+ * RETURNS: [errors, values]
+ * Retrieves the validation errors and values from the session
+ * and removes them from the session after retrieval
+ */
 function getValidationReturn() {
     $errors = [];
     $values = [];

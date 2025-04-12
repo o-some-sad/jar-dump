@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * pick specific keys from an array
+ */
 function pick(array $array, array $keys)
 {
     if(array_is_list($array)){
@@ -17,6 +20,9 @@ function pick(array $array, array $keys)
     return $result;
 }
 
+/**
+ * @deprecated
+ */
 function map(array $data, Closure $fn)
 {
     foreach ($data as $row) {
