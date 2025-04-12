@@ -48,17 +48,16 @@ function getValidationValues($fields)
     return $result;
 }
 
-
-
 function validateFile(string $name, array | null $allowedExts = null, int | null $maxSize = null)
 {
     // MOVE THE IMAGE FROM TMP TO A PERM. DIR.
     if (!isset($_FILES[$name])) return [false, "File not found"];
     $file = $_FILES[$name];
-    if(empty($file["temp_name"]) || $file["name"] || $file["error"] != 0) return [false, "Please make sure that you uploaded the file correctly"];
-    $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
+    if(empty($file["tmp_name"]) || empty($file["name"]) || $file["error"] != 0) return [false, "Please make sure that you uploaded the file correctly"];
+    $ext = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
     if (!is_null($allowedExts) && !in_array($ext, $allowedExts))return [false, "File type is not supported"];
-    return [true, $file];    
+    // $moveImg = move_uploaded_file($file["tmp_name"],"images/".$file["name"].$ext);
+    return [true, $file];
 }
 
 /**
@@ -95,9 +94,9 @@ function getValidationReturn() {
 function matchingPasswords(string $pass, string $confirmPass){
     // $errors = [];
     if($pass !== $confirmPass){
-        return ['password_match' => 'Passwords do not match'];
+        return [false, 'Passwords do not match'];
     } else{
-        return [];
+        return [true, $pass];
     }
 }
 // validate password & confirmPassword
