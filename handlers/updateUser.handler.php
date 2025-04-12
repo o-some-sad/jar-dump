@@ -19,7 +19,7 @@ if($userID == $currentUser['user_id'] && $values['role'] != $currentUser['role']
 }
 
 try {
-    $result = UserController::updateUser($userID, $values);
+    $result = UserController::updateUserFromDashboard($userID, $values);
     if (!$result) {
         redirectWithValidationResult($values, ['_' => "Failed to update user"], "/dashboard/users");
         exit;

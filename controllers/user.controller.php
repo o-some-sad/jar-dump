@@ -43,7 +43,7 @@ class UserController{
         return $updateStmt->rowCount();
     }
 
-    static public function updateUser($id, array $data){
+    static public function updateUserFromDashboard($id, array $data){
         $pdo = createPDO();
         $transactionStarted = $pdo->beginTransaction();
         if(!$transactionStarted){
