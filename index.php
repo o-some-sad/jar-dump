@@ -20,19 +20,26 @@ require_once "config.php";
 session_start();
 
 
-function userRoutes($request)
+function dashboardUserRoutes($request)
 {
     global $method;
     $matches =  matchRoute("/dashboard/users/{id}", $request);
     if ($matches && $method == "GET") {
         Auth::protect([Role::Admin]);
         $_REQUEST['params'] = $matches;
-        require __DIR__ . '/views/dashboard/edit_user.php';
+        require __DIR__ . '/views/dashboard/editUser.php';
         exit;
     }
     $matches = matchRoute("/dashboard/users/{id}/delete", $request);
     if ($matches && $method == "POST") {
+        Auth::protect([Role::Admin]);
         require __DIR__ . "/handlers/deleteUser.handler.php";
+        exit;
+    }
+    $matches = matchRoute("/dashboard/users/{id}", $request);
+    if ($matches && $method == "POST") {
+        Auth::protect([Role::Admin]);
+        require __DIR__ . "/handlers/updateUser.handler.php";
         exit;
     }
 }
@@ -64,7 +71,7 @@ switch ($request) {
         echo "<h1>user registration will be here</h1>";
         break;
     default:
-        userRoutes($request);
+        dashboardUserRoutes($request);
         // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
         //     $_REQUEST["PARAMS"] = array_slice($match, 1);
         //     require __DIR__ . "/views/edit.php";

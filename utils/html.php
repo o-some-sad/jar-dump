@@ -22,6 +22,10 @@ function h(string $tag, array | null $props = null, string | array ...$children)
     return $result;
 }
 
+function ph(string $tag, array | null $props = null, string | array ...$children) {
+    print h($tag, $props, ...$children);
+}
+
 
 function renderTable(array $data, array | null $fields = null, array $render = [])
 {

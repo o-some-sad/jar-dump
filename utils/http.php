@@ -23,6 +23,7 @@ function matchRoute($route, $path)
         notFound();
         exit;
     }
+    $_SERVER['params'] = $matches;
     return $matches;
 }
 
