@@ -10,6 +10,7 @@ function adminLayout_open(string $title) {
     <html lang="en">';
     head_open();
     echo "<title>$title</title>";
+    echo '<link rel="stylesheet" href="/static/style.css">';
     //write custom head tags here
     head_close();
     echo '<body>';

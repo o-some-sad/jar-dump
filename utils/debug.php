@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Dump and die
+ *
+ * @param mixed $data The data to dump.
+ */
 function dd($data)
 {
     echo '<pre>';
@@ -7,7 +12,13 @@ function dd($data)
     echo '</pre>';
 }
 
-//only dump
+
+/**
+ * Only dump
+ *
+ * @param mixed $data The data to output.
+ */
+
 function od($data)
 {
     echo '<pre>';

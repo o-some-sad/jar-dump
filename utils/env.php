@@ -1,5 +1,12 @@
 <?php
 
+
+/**
+ * Reads lines from a file, trims them, and then sets environment variables
+ * using the `putenv` function.
+ *
+ * @param string|null $path The path to the file to read. If null, ".env" is used.
+ */
 function loadEnv(string | null $path = null)
 {
     $env = file_get_contents($path ?? ".env");
