@@ -95,8 +95,8 @@ $render = [
                     "<td>
                        <template x-if='editing === {$row['user_id']}'>
                             <button type='submit' form='editing_{$row['user_id']}'>Save</button>
-                            <button @click='editing = null'>Cancel</button>
-                        </template>
+                            </template>
+                            <button x-show='editing === {$row['user_id']}' type='button' @click='editing = null'>Cancel</button>
                         <template x-if='editing !== {$row['user_id']}'>
                          <button @click='editing = {$row['user_id']}'>Edit</button>
                         </template>
