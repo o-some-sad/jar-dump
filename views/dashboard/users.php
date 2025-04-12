@@ -59,44 +59,71 @@ $render = [
         </tr>
     </thead>
     <tbody x-data='{editing: null}'>
-        <?= map($users, fn($row) => ph("tr", [], [
-            "<form id='editing_{$row['user_id']}' method='POST' action='/dashboard/users/{$row['user_id']}'></form>",
-            "<td>
-                {$row['user_id']}
-            </td>",
-            "<td>
-                <template x-if='editing === {$row['user_id']}'>
-                    <input name='name' form='editing_{$row['user_id']}' value='{$row['name']}' type='text'>
-                </template>
-                <template x-if='editing !== {$row['user_id']}'>
-                    <span>{$row['name']}</span>
-                </template>
-            </td>",
-            h("td", null, $row['email']),
-            "<td>
-                <template x-if='editing === {$row['user_id']}'>
-                    <select name='role' form='editing_{$row['user_id']}'>"
-                . 
-                h("option", [$row['role'] == "admin" ? "selected" : '' => '', 'value' => "admin"], "Admin")
-                . 
-                h("option", [$row['role'] == "user" ? "selected" : '' => '', 'value' => "user"], "User") 
-                .
-                "</select>
-                </template>
-                <template x-if='editing !== {$row['user_id']}'>
-                    <span>{$row['role']}</span>
-                </template>
-            </td>",
-
-            "<td>
-               <template x-if='editing === {$row['user_id']}'>
-                    <button type='submit' form='editing_{$row['user_id']}'>Save</button>
-                </template>
-                <template x-if='editing !== {$row['user_id']}'>
-                 <button @click='editing = {$row['user_id']}'>Edit</button>
-                </template>
-            </td>",
-        ])) ?>
+        <?php
+            foreach ($users as $row) {
+                $row = pick($row, ['user_id', 'name', 'email', 'role']);
+                $json = json_encode($row);
+                ph("tr", [], [
+                    "<form x-ref='editing_{$row['user_id']}' id='editing_{$row['user_id']}' method='POST' action='/dashboard/users/{$row['user_id']}'></form>",
+                    "<td>
+                        {$row['user_id']}
+                    </td>",
+                    "<td>
+                        <template x-if='editing === {$row['user_id']}'>
+                            <input name='name' form='editing_{$row['user_id']}' value='{$row['name']}' type='text'>
+                        </template>
+                        <template x-if='editing !== {$row['user_id']}'>
+                            <span>{$row['name']}</span>
+                        </template>
+                    </td>",
+                    h("td", null, $row['email']),
+                    "<td>
+                        <template x-if='editing === {$row['user_id']}'>
+                            <select name='role' form='editing_{$row['user_id']}'>"
+                        . 
+                        h("option", [$row['role'] == "admin" ? "selected" : '' => '', 'value' => "admin"], "Admin")
+                        . 
+                        h("option", [$row['role'] == "user" ? "selected" : '' => '', 'value' => "user"], "User") 
+                        .
+                        "</select>
+                        </template>
+                        <template x-if='editing !== {$row['user_id']}'>
+                            <span>{$row['role']}</span>
+                        </template>
+                    </td>",
+        
+                    "<td>
+                       <template x-if='editing === {$row['user_id']}'>
+                            <button type='submit' form='editing_{$row['user_id']}'>Save</button>
+                            <button @click='editing = null'>Cancel</button>
+                        </template>
+                        <template x-if='editing !== {$row['user_id']}'>
+                         <button @click='editing = {$row['user_id']}'>Edit</button>
+                        </template>
+                        <form x-ref='delete_{$row['user_id']}' @submit.prevent='confirmUserDelete($json, \$refs.delete_{$row['user_id']})' method='POST' action='/dashboard/users/{$row['user_id']}/delete'>
+                            <button type='submit'>Delete</button>
+                        </form>
+                    </td>",
+                ]);    
+            }
+        ?>
     </tbody>
 </table>
+
+<script>
+    function confirmUserDelete(json, form) {
+        //TODO: show modal
+        if(confirm("Are you sure you want to delete this user?")) {
+            console.log(form);
+            
+            if(!(form instanceof HTMLFormElement)) {
+                alert("Cannot delete this user, please contact system admin");
+                return;
+            }
+            form.submit();
+            
+        }
+        
+    }
+</script>
 <?= adminLayout_close(); ?>

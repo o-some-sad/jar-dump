@@ -35,7 +35,7 @@ class UserController{
         if(!$transactionStarted){
             throw new Exception("Transaction Failed");
         }
-        $updateStmt = $pdo->prepare("update users set deleted_at = now() where user_id = :user_id and deleted_at is not null");
+        $updateStmt = $pdo->prepare("update users set deleted_at = now() where user_id = :user_id and deleted_at is null");
         $updateStmt->bindValue("user_id", (int)$id, PDO::PARAM_INT);
         $updateStmt->execute();
         $pdo->commit();
