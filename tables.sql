@@ -1,5 +1,5 @@
-create database php_project;
-use php_project;
+--CREATE DATABASE php_project;
+--use php_project;
 
 create table if not exists users (user_id int primary key auto_increment, name varchar(50) not null, email varchar(100) not null unique,
 password varchar(250) not null, 

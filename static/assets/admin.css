@@ -1,0 +1,18 @@
+.navbar {
+    margin-bottom: 2rem;
+}
+
+.nav-link .fas {
+    width: 1.5rem;
+    text-align: center;
+}
+
+.alert {
+    margin-bottom: 2rem;
+}
+
+.footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    border-top: 1px solid #eee;
+}
