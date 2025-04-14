@@ -14,7 +14,7 @@ RewriteEngine On
 # RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_URI} !^/static* [NC]
-RewriteCond %{REQUEST_URI} !^/files* [NC]
+RewriteCond %{REQUEST_URI} !^/public* [NC]
 RewriteRule ^(.+)$ index.php [QSA,L]
 
 

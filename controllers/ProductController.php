@@ -18,7 +18,7 @@ class ProductController {
                        CASE 
                            WHEN p.image LIKE '/public/%' THEN p.image
                            WHEN p.image IS NOT NULL THEN CONCAT('/public/uploads/products/', p.image)
-                           ELSE '/public/img/no-image.png'
+                           ELSE '/static/no-image.png'
                        END as image_url
                 FROM products p 
                 LEFT JOIN category c ON p.category_id = c.category_id 
