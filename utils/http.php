@@ -12,6 +12,14 @@ function redirect($to, $status = 302){
     exit;
 }
 
+/**
+ * Matches a given route with a path and sets $_SERVER['params'] to
+ * an associative array of named parameters.
+ *
+ * @param string $route
+ * @param string $path
+ * @return array associative array of named parameters
+ */
 function matchRoute($route, $path)
 {
     $path = rtrim($path, "/");
@@ -23,6 +31,7 @@ function matchRoute($route, $path)
         notFound();
         exit;
     }
+    $_SERVER['params'] = $matches;
     return $matches;
 }
 
