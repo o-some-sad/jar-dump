@@ -59,4 +59,25 @@ class UserController{
         $pdo = null;
         return $updateStmt->rowCount();
     }
+
+    public function insertIntoUsers(array $values, $path=null)
+        {
+            $pdo = createPDO();
+            if (!$pdo) {
+                return [false, "Failed to connect to database."];
+            }
+                $stmt = $pdo->prepare("
+                    INSERT INTO `users` (name, email, password, role, profile_picture)
+                    VALUES (:name, :email, :password, :role, :profile_picture)
+                ");
+                $stmt->bindParam(':name', $values['user_name']);
+                // CHECK IF $values['user_email'] EXISTS IN THE DB,
+                // IF YES THEN $_SESSION['ERROR']=['Duplicate_Email'=>'This email is already used.']
+                $stmt->bindParam(':email', $values['user_email']);
+                $stmt->bindParam(':password', $values['user_password']);
+                $stmt->bindValue(':role', 'user');
+                $stmt->bindParam(':profile_picture', $path);
+                $stmt->execute();
+                $pdo=null;
+        }
 }
