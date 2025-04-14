@@ -2,3 +2,4 @@ files/
 **/*.env
 # PLEASE DO NOT FORGET TO CREATE config.php WITH PROPER VALUES
 config.php
+public

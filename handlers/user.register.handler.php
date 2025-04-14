@@ -39,8 +39,8 @@ $validationResult = [
     $uploadedImg = $imageValidation[1];
     if ($uploadedImg['tmp_name']) {
         $ext = strtolower(pathinfo($uploadedImg['name'], PATHINFO_EXTENSION));
-        $filename = uniqid() . '.' . $ext; // uniqid() --> for unique filenames
-        $destination = 'images/' . $filename;
+        $filename = 'userImg'.uniqid() . '.' . $ext; // uniqid() --> for unique filenames
+        $destination = 'public/'.$filename;
         $moveImg = move_uploaded_file($uploadedImg['tmp_name'], $destination);
         $path = $destination; // path for db
     }
