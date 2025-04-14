@@ -90,7 +90,6 @@ function getValidationReturn() {
     return [$errors, $values];
 }
 
-
 function matchingPasswords(string $pass, string $confirmPass){
     // $errors = [];
     if($pass !== $confirmPass){

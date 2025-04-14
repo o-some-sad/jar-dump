@@ -80,6 +80,27 @@
       <img class="w-[300px] h-[300px] object-contain" src="https://cdn-icons-png.flaticon.com/512/921/921359.png" alt="">
     </div>
   </div>
-  <?php unset($_SESSION['errors'], $_SESSION['values']); // Clear after display ?>
+  <!-- ?? -->
+  <?php unset($_SESSION['errors'], $_SESSION['values']); ?>
 </body>
 </html>
+
+<!-- POINTS LEFT TO DO: -->
+<!-- 
+QUESTION: WHY DO WE USE $_values[''] instead of $_POST['']
+QUESTION: understand $_SESSION[errors] &&  $_SESSION[values]
+1. When I add the user successfully with NO errors, redirect to a page where it says 'user added successfully' and
+a 'back' button where it goes to the home page OR display it as a message 
+2. Image error are NOT displayed if there are other errors in the form
+3. When I click on reset, the password/confirm-password are not reset
+4. DON'T the 'choose-file' input when other fields are incorrect
+5. Display a message when the email-input exists in the DB, error down below
+Fatal error: Uncaught PDOException: SQLSTATE[23000]:
+Integrity constraint violation: 1062 Duplicate entry 'jana@gmail.com' for key 'users.email' in /Applications/MAMP/htdocs/controllers/user.controller.php:42 
+Stack trace: #0 /Applications/MAMP/htdocs/controllers/user.controller.php(42):
+PDOStatement->execute() #1 /Applications/MAMP/htdocs/handlers/user.register.handler.php(51): 
+UserController->insertIntoUsers(Array, 'images/67f9d27f...') #2 /Applications/MAMP/htdocs/index.php(67): 
+require('/Applications/M...') #3 {main} thrown in /Applications/MAMP/htdocs/controllers/user.controller.php 
+on line 42
+6. nav bar
+-->
