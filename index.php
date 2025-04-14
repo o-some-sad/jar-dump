@@ -118,7 +118,6 @@ switch ($request) {
             exit;
         }
         break;
-    
         
     case '/admin/products/create':
         // Auth::protect([Role::Admin]);

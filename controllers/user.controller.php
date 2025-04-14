@@ -4,8 +4,6 @@ require_once "utils/pdo.php";
 require_once "utils/common.php";
 
 class UserController{
-
-
     static public function getAllUsers(int $offset = 0, int $limit = 10, bool $includeDeleted = false){
         try{
             $pdo = createPDO();
@@ -71,8 +69,8 @@ class UserController{
                     VALUES (:name, :email, :password, :role, :profile_picture)
                 ");
                 $stmt->bindParam(':name', $values['user_name']);
-                // CHECK IF $values['user_email'] EXISTS IN THE DB,
-                // IF YES THEN $_SESSION['ERROR']=['Duplicate_Email'=>'This email is already used.']
+                // **CHECK IF $values['user_email'] EXISTS IN THE DB,
+                // **IF YES THEN $_SESSION['ERROR']=['Duplicate_Email'=>'This email is already used.']
                 $stmt->bindParam(':email', $values['user_email']);
                 $stmt->bindParam(':password', $values['user_password']);
                 $stmt->bindValue(':role', 'user');
