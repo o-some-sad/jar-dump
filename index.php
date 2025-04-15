@@ -21,7 +21,7 @@ $method = $_SERVER["REQUEST_METHOD"];
 // loadEnv();
 //require_once "config.php";
 session_start();
-try{
+try {
     //TODO: find a better way to do this
     require_once __DIR__ . '/utils/pdo.php';
     $pdo = createPDO();
@@ -60,10 +60,10 @@ switch ($request) {
         break;
 
     case '/homepage':
-            Auth::protect();
-            if ($method == "GET") require __DIR__. '/views/homepage.php';
-            else notFound();
-            break;
+        Auth::protect();
+        if ($method == "GET") require __DIR__ . '/views/homepage.php';
+        else notFound();
+        break;
 
     case '/login':
         if ($method == "GET") require __DIR__ . '/views/login.php';
@@ -79,7 +79,7 @@ switch ($request) {
         break;
     case '/admin':
         Auth::protect([Role::Admin]);
-        if($method != "GET") notFound();
+        if ($method != "GET") notFound();
         require __DIR__ . '/views/admin/index.php';
         break;
     case '/admin/users':
@@ -94,27 +94,27 @@ switch ($request) {
         else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else notFound();
         break;
-    
+
     case '/user/order/store':
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require __DIR__ . '/handlers/order.user.handler.php';
         }
-        break;   
+        break;
 
     case '/admin/orders':
         Auth::protect([Role::Admin]);
-        if ($method == "GET") require __DIR__. '/views/orders/order.status.php';
+        if ($method == "GET") require __DIR__ . '/views/orders/order.status.php';
         else notFound();
         break;
-    
+
     case '/admin/order/status/store':
         Auth::protect([Role::Admin]);
-        if ($method == "POST") require __DIR__. '/handlers/order.status.handler.php';
+        if ($method == "POST") require __DIR__ . '/handlers/order.status.handler.php';
         else notFound();
         break;
 
     case '/admin/products':
-//         //         Auth::protect([Role::Admin]);
+        //         //         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
         $products = $controller->getProducts();
         require __DIR__ . '/views/products/index.php';
@@ -146,8 +146,8 @@ switch ($request) {
             exit;
         }
         break;
-    
-        
+
+
     case '/admin/products/create':
         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
@@ -155,13 +155,13 @@ switch ($request) {
         require __DIR__ . '/views/products/create.php';
         break;
     case (preg_match('/^\/admin\/products\/edit\/(\d+)$/', $request, $matches) ? true : false):
-Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         try {
             $id = (int)$matches[1];
             $controller = new ProductController($pdo);
             $product = $controller->getProductById($id);
             $categories = $controller->getAllCategories();
-            
+
             if (!$product) {
                 $_SESSION['flash'] = [
                     'type' => 'danger',
@@ -170,7 +170,7 @@ Auth::protect([Role::Admin]);
                 header('Location: /admin/products');
                 exit;
             }
-            
+
             require __DIR__ . '/views/products/edit.php';
         } catch (Exception $e) {
             error_log("Edit error: " . $e->getMessage());
@@ -187,7 +187,7 @@ Auth::protect([Role::Admin]);
         try {
             $id = (int)$matches[1];
             $controller = new ProductController($pdo);
-            
+
             if ($controller->deleteProduct($id)) {
                 $_SESSION['flash'] = [
                     'type' => 'success',
@@ -237,7 +237,7 @@ Auth::protect([Role::Admin]);
                     'quantity' => (int)$_POST['quantity'] ?? 0,
                     'description' => $_POST['description'] ?? ''
                 ];
-                
+
                 if ($controller->updateProduct($id, $data)) {
                     $_SESSION['flash'] = [
                         'type' => 'success',
@@ -261,13 +261,17 @@ Auth::protect([Role::Admin]);
         require __DIR__ . '/views/admin/addOrderToUser.php';
         break;
     case '/admin/order/store':
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require __DIR__ . '/handlers/order.handler.php';
         }
-        break;                             
+        break;
+    case '/admin/checks':
+        Auth::protect([Role::Admin]);
+        require __DIR__ . '/views/admin/checks.php';
+        break;
     default:
         dashboardUserRoutes($request);
-// if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
+        // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
         //     $_REQUEST["PARAMS"] = array_slice($match, 1);
         //     require __DIR__ . "/views/edit.php";
         //     break;
