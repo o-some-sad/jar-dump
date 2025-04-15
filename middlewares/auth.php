@@ -27,7 +27,7 @@ class Auth
     static private bool $is_request_protected = false;
     static private array | null $current_user = null;
     static private function  preventAccess(string $message = "Your'e not allowed here"){
-        echo $message;
+        require_once __DIR__. '/../views/403.php';
         exit;
     }
 
