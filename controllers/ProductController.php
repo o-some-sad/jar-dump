@@ -17,7 +17,7 @@ class ProductController {
         $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
         return $total;
     }
-
+   
     public function getProducts() {
         try {
             $stmt = $this->pdo->prepare("

@@ -12,6 +12,7 @@ require_once "utils/http.php";
 require_once "utils/env.php";
 require_once "controllers/user.controller.php";
 require_once __DIR__ . '/controllers/ProductController.php';
+require_once __DIR__ . '/controllers/CategoryController.php';
 
 
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -305,6 +306,43 @@ switch ($request) {
     case '/admin/checks':
         Auth::protect([Role::Admin]);
         require __DIR__ . '/views/admin/checks.php';
+        break;
+    case '/admin/categories/store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Clear any output buffering
+            ob_clean();
+            
+            try {
+                // Decode and validate input
+                $input = json_decode(file_get_contents('php://input'), true);
+                if (!$input || !isset($input['name'])) {
+                    throw new Exception('Invalid input data');
+                }
+
+                // Create category
+                require_once __DIR__ . '/controllers/CategoryController.php';
+                $controller = new CategoryController($pdo);
+                $categoryId = $controller->createCategory($input['name']);
+
+                // Send success response
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'category_id' => $categoryId,
+                    'message' => 'Category created successfully'
+                ]);
+
+            } catch (Exception $e) {
+                error_log("Category creation error: " . $e->getMessage());
+                http_response_code(400);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+            exit;
+        }
         break;
     default:
         dashboardUserRoutes($request);
