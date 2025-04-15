@@ -34,19 +34,14 @@ require_once __DIR__ . '/../../components/adminLayout.php';
 
         <div class="mb-3">
             <label for="category_id" class="form-label">Category</label>
-            <div class="input-group">
-                <select class="form-select" id="category_id" name="category_id" required>
-                    <option value="">Select a category</option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?= htmlspecialchars($category['category_id']) ?>">
-                            <?= htmlspecialchars($category['name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                    <i class="bi bi-plus">+</i>
-                </button>
-            </div>
+            <select class="form-select" id="category_id" name="category_id" required>
+                <option value="">Select a category</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= htmlspecialchars($category['category_id']) ?>">
+                        <?= htmlspecialchars($category['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -78,95 +73,3 @@ require_once __DIR__ . '/../../components/adminLayout.php';
         <button type="submit" class="btn btn-primary">Create Product</button>
     </form>
 </div>
-
-<!-- Add Category Modal -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="categoryForm" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="categoryName" name="name" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-document.getElementById('categoryForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    try {
-        const categoryName = document.getElementById('categoryName').value.trim();
-        if (!categoryName) {
-            throw new Error('Please enter a category name');
-        }
-
-        const response = await fetch('/admin/categories/store', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ name: categoryName })
-        });
-
-        // First check if the response is ok
-        if (!response.ok) {
-            const text = await response.text();
-            console.error('Server response:', text);
-            throw new Error('Server returned an error');
-        }
-
-        // Try to parse the JSON
-        let data;
-        try {
-            data = await response.json();
-        } catch (err) {
-            console.error('JSON parse error:', err);
-            throw new Error('Invalid response format from server');
-        }
-
-        // Add new option to select
-        const select = document.getElementById('category_id');
-        const option = new Option(categoryName, data.category_id);
-        select.add(option);
-        select.value = data.category_id;
-
-        // Close modal and reset form
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addCategoryModal'));
-        modal.hide();
-        document.getElementById('categoryForm').reset();
-
-        // Show success message
-        showAlert('success', 'Category created successfully');
-
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('danger', error.message);
-    }
-});
-
-// Helper function to show alerts
-function showAlert(type, message) {
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    document.querySelector('.container').insertBefore(alert, document.querySelector('.container').firstChild);
-}
-</script>
