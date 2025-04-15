@@ -6,7 +6,7 @@ function createPDO(){
     $db = DB_NAME;
     $user = DB_USER;
     $pass = DB_PASS;
-
+    
     $connection = "mysql:host=$host:$port;dbname=$db";
     
     return new PDO($connection, $user, $pass);

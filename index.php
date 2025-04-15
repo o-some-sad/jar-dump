@@ -22,31 +22,25 @@ $method = $_SERVER["REQUEST_METHOD"];
 require_once "config.php";
 session_start();
 try{
+    //TODO: find a better way to do this
     require_once __DIR__ . '/utils/pdo.php';
     $pdo = createPDO();
 } catch (Exception $e) {
     error_log("Database connection failed: " . $e->getMessage());
     die("Database connection failed.");
 }
-require_once __DIR__ . '/components/adminLayout.php';
+// require_once __DIR__ . '/components/adminLayout.php';
 
 function dashboardUserRoutes($request)
 {
     global $method;
-    $matches =  matchRoute("/dashboard/users/{id}", $request);
-    if ($matches && $method == "GET") {
-        Auth::protect([Role::Admin]);
-        $_REQUEST['params'] = $matches;
-        require __DIR__ . '/views/dashboard/editUser.php';
-        exit;
-    }
-    $matches = matchRoute("/dashboard/users/{id}/delete", $request);
+    $matches = matchRoute("/admin/users/{id}/delete", $request);
     if ($matches && $method == "POST") {
         Auth::protect([Role::Admin]);
         require __DIR__ . "/handlers/deleteUser.handler.php";
         exit;
     }
-    $matches = matchRoute("/dashboard/users/{id}", $request);
+    $matches = matchRoute("/admin/users/{id}", $request);
     if ($matches && $method == "POST") {
         Auth::protect([Role::Admin]);
         require __DIR__ . "/handlers/updateUser.handler.php";
@@ -66,6 +60,7 @@ switch ($request) {
         break;
 
     case '/homepage':
+            Auth::protect();
             if ($method == "GET") require __DIR__. '/views/homepage.php';
             else notFound();
             break;
@@ -82,14 +77,19 @@ switch ($request) {
         if ($method == "POST") require __DIR__ . '/handlers/logout.handler.php';
         else notFound();
         break;
-    case '/dashboard/users':
+    case '/admin':
         Auth::protect([Role::Admin]);
-        require __DIR__ . '/views/dashboard/users.php';
+        if($method != "GET") notFound();
+        require __DIR__ . '/views/admin/index.php';
         break;
-    case '/dashboard/users/new':
+    case '/admin/users':
+        Auth::protect([Role::Admin]);
+        require __DIR__ . '/views/admin/users.php';
+        break;
+    case '/admin/users/new':
         // Auth::protect([Role::Admin]);
         // echo "<h1>user registration will be here</h1>";
-        if ($method == "GET") require __DIR__ . '/views/dashboard/createUser.php';
+        if ($method == "GET") require __DIR__ . '/views/admin/createUser.php';
         // else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else notFound();
@@ -253,7 +253,7 @@ switch ($request) {
         }
         break;
     case '/admin/order':
-        require __DIR__ . '/views/dashboard/addOrderToUser.php';
+        require __DIR__ . '/views/admin/addOrderToUser.php';
         break;
     case '/admin/order/store':
         if($_SERVER['REQUEST_METHOD'] === 'POST') {

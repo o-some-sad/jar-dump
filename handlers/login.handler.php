@@ -18,15 +18,15 @@ $validationResult = [
     ),
     'password' => validate(
         "password",
-        custom: fn($pass)=>[strlen($pass) >= 8, "Password needs to be at least 8 characters"]
+        custom: fn($pass) => [strlen($pass) >= 8, "Password needs to be at least 8 characters"]
     )
 ];
 
 $values = handleValidationResult($validationResult, "/login");
 
 
-try{
-    if(Auth::isAuthed()){
+try {
+    if (Auth::isAuthed()) {
         //already authed, just redirect
         redirect($_GET["to"] ?? "/homepage");
         exit;
@@ -38,11 +38,11 @@ try{
         'email' => $values['email']
     ]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    if(!$user){
+    if (!$user) {
         redirectWithValidationResult($values, ['_' => "Email or password is incorrect"], "/login");
         exit;
     }
-    if(!password_verify($values['password'], $user['password'])){
+    if (!password_verify($values['password'], $user['password'])) {
         redirectWithValidationResult($values, ['_' => "Email or password is incorrect"], "/login");
         exit;
     }
@@ -52,7 +52,6 @@ try{
     $_SESSION['user'] = $user;
     redirect($_GET["to"] ?? "/homepage");
     exit;
-}
-catch(PDOException $e){
+} catch (PDOException $e) {
     dd($e);
 }

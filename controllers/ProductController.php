@@ -10,6 +10,14 @@ class ProductController {
         $this->pdo = $pdo;
     }
 
+    static public function getProductsCount(){
+        $pdo = createPDO();
+        $stmt = $pdo->prepare("select count(*) as total from products where deleted_at is null");
+        $stmt->execute();
+        $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        return $total;
+    }
+
     public function getProducts() {
         try {
             $stmt = $this->pdo->prepare("

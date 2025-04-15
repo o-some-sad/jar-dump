@@ -29,7 +29,7 @@
           Add User
         </h1><br>
         <!-- <form class="space-y-4 md:space-y-6 flex flex-col items-center justify-center w-[400px]" action="/dashboard/users/new" method="POST" enctype="multipart/form-data"> -->
-        <form class="space-y-6 md:space-y-8 flex flex-col items-center justify-center w-[400px]" action="/dashboard/users/new" method="POST" enctype="multipart/form-data">
+        <form class="space-y-6 md:space-y-8 flex flex-col items-center justify-center w-[400px]" action="/admin/users/new" method="POST" enctype="multipart/form-data">
   
         <div class="w-[300px]">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>

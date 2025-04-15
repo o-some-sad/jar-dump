@@ -53,7 +53,7 @@ function validateFile(string $name, array | null $allowedExts = null, int | null
     // MOVE THE IMAGE FROM TMP TO A PERM. DIR.
     if (!isset($_FILES[$name])) return [false, "File not found"];
     $file = $_FILES[$name];
-    if(empty($file["tmp_name"]) || empty($file["name"]) || $file["error"] != 0) return [false, "Please make sure that you uploaded the file correctly"];
+    if(empty($file["tmp_name"]) || empty($file["name"]) || $file["error"] != 0) return [false, "Please make sure that you uploaded the file correctly, maybe the file is too big"];
     $ext = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
     if (!is_null($allowedExts) && !in_array($ext, $allowedExts))return [false, "File type is not supported"];
     // $moveImg = move_uploaded_file($file["tmp_name"],"images/".$file["name"].$ext);
