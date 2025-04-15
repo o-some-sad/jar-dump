@@ -44,12 +44,25 @@ class OrderController
     ]);
     }
     public function createOrderItem($data) {
+        $this->pdo->beginTransaction();
         $stmt = $this->pdo->prepare("INSERT INTO order_items (product_id, order_id, quantity) VALUES (?, ?, ?)");
-        return $stmt->execute([
-            $data['product_id'],  
-            $data['order_id'],    
-            $data['quantity']
-        ]);
+
+        $reduceQuantityStmt = $this->pdo->prepare("UPDATE products SET quantity = quantity - ? WHERE product_id = ?");
+
+        if (!$stmt->execute([$data['product_id'], $data['order_id'], $data['quantity']])) {
+            $this->pdo->rollBack();
+            return false;
+        }
+
+        if (!$reduceQuantityStmt->execute([$data['quantity'], $data['product_id']])) {
+            $this->pdo->rollBack();
+            return true;
+        }
+
+      
+
+        $this->pdo->commit();  
+        return true; 
     }
 
     private function getLastOrderIdOfUser($userId){
