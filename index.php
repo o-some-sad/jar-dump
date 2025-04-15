@@ -87,7 +87,7 @@ switch ($request) {
         require __DIR__ . '/views/admin/users.php';
         break;
     case '/admin/users/new':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         // echo "<h1>user registration will be here</h1>";
         if ($method == "GET") require __DIR__ . '/views/admin/createUser.php';
         // else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
@@ -102,13 +102,13 @@ switch ($request) {
         break;   
 
     case '/admin/orders':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         if ($method == "GET") require __DIR__. '/views/orders/order.status.php';
         else notFound();
         break;
     
     case '/admin/order/status/store':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         if ($method == "POST") require __DIR__. '/handlers/order.status.handler.php';
         else notFound();
         break;
@@ -120,7 +120,7 @@ switch ($request) {
         require __DIR__ . '/views/products/index.php';
         break;
     case  '/admin/products/store':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $controller = new ProductController($pdo);
@@ -129,9 +129,8 @@ switch ($request) {
                     'category_id' => $_POST['category_id'] ?? '',
                     'price' => $_POST['price'] ?? '',
                     'quantity' => $_POST['quantity'] ?? '',
-                    'description' => $_POST['description'] ?? ''
+                    'description' => $_POST['description'] ?? '',
                 ];
-                
                 $controller->createProduct($data);
                 $_SESSION['flash'] = [
                     'type' => 'success',
@@ -150,13 +149,13 @@ switch ($request) {
     
         
     case '/admin/products/create':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
         $categories = $controller->getAllCategories();
         require __DIR__ . '/views/products/create.php';
         break;
     case (preg_match('/^\/admin\/products\/edit\/(\d+)$/', $request, $matches) ? true : false):
-// Auth::protect([Role::Admin]);
+Auth::protect([Role::Admin]);
         try {
             $id = (int)$matches[1];
             $controller = new ProductController($pdo);
@@ -184,7 +183,7 @@ switch ($request) {
         }
         break;
     case (bool)preg_match('/^\/admin\/products\/delete\/(\d+)$/', $request, $matches):
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         try {
             $id = (int)$matches[1];
             $controller = new ProductController($pdo);
@@ -208,7 +207,7 @@ switch ($request) {
         exit;
         break;
     case '/admin/products/delete':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
         $id = $_REQUEST['id'] ?? null;
         if ($id) {
@@ -226,7 +225,7 @@ switch ($request) {
         header('Location: /admin/products');
         exit;
     case '/admin/products/update':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $controller = new ProductController($pdo);
@@ -259,21 +258,13 @@ switch ($request) {
         }
         break;
     case '/admin/order':
-                Auth::protect([Role::Admin]);
-
         require __DIR__ . '/views/admin/addOrderToUser.php';
         break;
     case '/admin/order/store':
-                Auth::protect([Role::Admin]);
-
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             require __DIR__ . '/handlers/order.handler.php';
         }
-        break;   
-    case '/admin/checks':
-                Auth::protect([Role::Admin]);
-        require __DIR__ . '/views/admin/checks.php';
-        break;                          
+        break;                             
     default:
         dashboardUserRoutes($request);
 // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {

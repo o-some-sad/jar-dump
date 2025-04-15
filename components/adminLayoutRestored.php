@@ -12,6 +12,7 @@ function adminLayout_open(string $title) {
     echo "<title>$title</title>";
     echo '<link rel="stylesheet" href="/static/style.css">';
     echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
+    echo '<script src="https://cdn.tailwindcss.com"></script>';
     //write custom head tags here
     head_close();
     echo '<body>';
