@@ -73,6 +73,13 @@ foreach ($_SESSION['selection'] as $product) {
     $totalPrice += $product['price'] * $count;
 }
 
+$flashMessage = $_SESSION['flash'] ?? null;
+if ($flashMessage) {
+    // Clear the flash message after displaying
+    unset($_SESSION['flash']);
+}
+
+
 $users = UserController::getAllUsers(0, 10, true)['data'];
 ?>
 
@@ -114,6 +121,14 @@ $users = UserController::getAllUsers(0, 10, true)['data'];
 
 <body class="p-4">
     <div class="container">
+
+    <?php if ($flashMessage): ?>
+            <div class="alert alert-<?= $flashMessage['type'] ?> alert-dismissible fade show" role="alert">
+                <?= $flashMessage['message'] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
         <div class="row">
             <!-- Left Section -->
             <div class="col-md-5">
@@ -164,8 +179,8 @@ $users = UserController::getAllUsers(0, 10, true)['data'];
                     <div class="mb-3">
                         <label for="room" class="form-label">Room</label>
                         <select class="form-select" name="room" id="room">
-                            <option value="room1">Room 1</option>
-                            <option value="room2">Room 2</option>
+                            <option value="1">Room 1</option>
+                            <option value="2">Room 2</option>
                         </select>
                     </div>
 

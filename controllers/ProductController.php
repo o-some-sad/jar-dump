@@ -42,6 +42,24 @@ class ProductController {
         }
     }
 
+    public function getProductIdByName($name){
+        try {
+            $stmt = $this->pdo->prepare("SELECT product_id FROM products WHERE name = :name");
+            $stmt->execute(['name' => $name]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$product) {
+                throw new Exception("Product not found");
+            }
+
+            return $product['product_id']; 
+        }
+        catch (PDOException $e) {
+            error_log("Error fetching product: ". $e->getMessage());
+            return null; 
+        }
+    }
+
     public function getProductById($id) {
         try {
             $stmt = $this->pdo->prepare("

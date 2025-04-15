@@ -28,11 +28,27 @@ class OrderController
 
     public function createOrder($data)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO orders (user_id, product_id, quantity, total_price) VALUES (?, ?, ?, ?)");
-        return $stmt->execute([$data['user_id'], $data['product_id'], $data['quantity'], $data['total_price']]);
+        $stmt = $this->pdo->prepare("
+        INSERT INTO orders 
+        (user_id, total_price, status, room_no, ext, notes, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, NOW())
+    ");
+    
+    return $stmt->execute([
+        $data['user_id'],
+        $data['total_price'],
+        $data['status'] ?? 'processing',  
+        $data['room_no'],
+        $data['ext'] ?? 1,          
+        $data['notes'] ?? "default notes"         
+    ]);
     }
-    public function createOrderItem($data){
-        $stmt = $this->pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity) VALUES (?,?,?)");
-        return $stmt->execute([$data['order_id'], $data['product_id'], $data['quantity']]);
+    public function createOrderItem($data) {
+        $stmt = $this->pdo->prepare("INSERT INTO order_items (product_id, order_id, quantity) VALUES (?, ?, ?)");
+        return $stmt->execute([
+            $data['product_id'],  
+            $data['order_id'],    
+            $data['quantity']     
+        ]);
     }
 }
