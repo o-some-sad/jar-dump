@@ -1,8 +1,7 @@
 <?php
-session_start();
 $user = $_SESSION['user'];
 require_once __DIR__ . "/../controllers/ProductController.php";
-require_once "C:/xampp/htdocs/utils/pdo.php";
+require_once  __DIR__ . "/../utils/pdo.php";
 $pdo = createPDO();
 $productController = new ProductController($pdo);
 $products = $productController->getProducts();
