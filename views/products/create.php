@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__ . '/../../controllers/ProductController.php';
 require_once __DIR__ . '/../../utils/pdo.php';
+require_once __DIR__ . '/../../utils/validationHelper.php';
+require_once __DIR__ . '/../../controllers/CategoryController.php';
 
 $pdo = createPDO();
 $controller = new ProductController($pdo);
-$categories = $controller->getAllCategories();
+$categories = (new CategoryController($pdo))->getAllCategories();
 
 if (empty($categories)) {
     $_SESSION['flash'] = [
@@ -15,6 +17,17 @@ if (empty($categories)) {
     exit;
 }
 
+// Get any validation errors and values from session
+$errors = $_SESSION['validation_errors'] ?? [];
+$values = $_SESSION['validation_values'] ?? [];
+
+// Clear validation data from session
+unset($_SESSION['validation_errors']);
+unset($_SESSION['validation_values']);
+
+// Get categories for dropdown
+$categories = $controller->getAllCategories();
+
 require_once __DIR__ . '/../../components/adminLayout.php';
 ?>
 
@@ -24,64 +37,118 @@ require_once __DIR__ . '/../../components/adminLayout.php';
         <a href="/admin/products" class="btn btn-secondary">Back to Products</a>
     </div>
 
+    <!-- Show validation errors if any -->
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                <?php foreach ($errors as $field => $error): ?>
+                    <li><?= htmlspecialchars($error) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
     <form action="/admin/products/store" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
         <input type="hidden" name="action" value="create">
         
         <div class="mb-3">
             <label for="name" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" 
+                   class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" 
+                   id="name" 
+                   name="name" 
+                   value="<?= htmlspecialchars($values['name'] ?? '') ?>" 
+                   required>
+            <?php if (isset($errors['name'])): ?>
+                <div class="invalid-feedback"><?= htmlspecialchars($errors['name']) ?></div>
+            <?php endif; ?>
         </div>
 
-    <div class="mb-3">
-    <label for="category_id" class="form-label">Category</label>
-    <div class='d-flex'>
-    <select class="form-select" id="category_id" name="category_id" required>
-        <option value="">Select a category</option>
-        <?php foreach ($categories as $category): ?>
-            <option value="<?= htmlspecialchars($category['category_id']) ?>">
-                <?= htmlspecialchars($category['name']) ?>
-            </option>
-        <?php endforeach; ?>
-        
-       
-    </select>
-    <button type="button" class="btn  add-category-link bg-primary text-white" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-        <i class="bi bi-plus-circle">+</i> 
-       </button>
-
-    </div>
-   
-    
-    <!-- "Add New Category" Button with Bootstrap Plus Icon -->
-   
-</div>
-
+        <div class="mb-3">
+            <label for="category_id" class="form-label">Category</label>
+            <div class='d-flex'>
+                <select class="form-select <?= isset($errors['category_id']) ? 'is-invalid' : '' ?>" 
+                        id="category_id" 
+                        name="category_id" 
+                        required>
+                    <option value="">Select a category</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= htmlspecialchars($category['category_id']) ?>"
+                                <?= ($values['category_id'] ?? '') == $category['category_id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($category['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="button" class="btn  add-category-link bg-primary text-white" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    <i class="bi bi-plus-circle">+</i> 
+                </button>
+                <?php if (isset($errors['category_id'])): ?>
+                    <div class="invalid-feedback"><?= htmlspecialchars($errors['category_id']) ?></div>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <div class="mb-3">
             <label for="price" class="form-label">Price</label>
-            <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+            <input type="number" 
+                   step="0.01" 
+                   class="form-control <?= isset($errors['price']) ? 'is-invalid' : '' ?>" 
+                   id="price" 
+                   name="price" 
+                   value="<?= htmlspecialchars($values['price'] ?? '') ?>" 
+                   required>
+            <?php if (isset($errors['price'])): ?>
+                <div class="invalid-feedback"><?= htmlspecialchars($errors['price']) ?></div>
+            <?php endif; ?>
         </div>
 
         <div class="mb-3">
             <label for="quantity" class="form-label">Quantity</label>
-            <input type="number" class="form-control" id="quantity" name="quantity" required>
+            <input type="number" 
+                   class="form-control <?= isset($errors['quantity']) ? 'is-invalid' : '' ?>" 
+                   id="quantity" 
+                   name="quantity" 
+                   value="<?= htmlspecialchars($values['quantity'] ?? '') ?>" 
+                   required>
+            <?php if (isset($errors['quantity'])): ?>
+                <div class="invalid-feedback"><?= htmlspecialchars($errors['quantity']) ?></div>
+            <?php endif; ?>
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description"></textarea>
+            <textarea class="form-control" 
+                      id="description" 
+                      name="description"
+                      rows="3"><?= htmlspecialchars($values['description'] ?? '') ?></textarea>
         </div>
+
         <div class="mb-3">
             <label for="image" class="form-label">Product Image</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            <input type="file" 
+                   class="form-control <?= isset($errors['image']) ? 'is-invalid' : '' ?>" 
+                   id="image" 
+                   name="image" 
+                   accept="image/*">
             <div class="form-text">Supported formats: JPG, JPEG, PNG, GIF</div>
+            <?php if (isset($errors['image'])): ?>
+                <div class="invalid-feedback"><?= htmlspecialchars($errors['image']) ?></div>
+            <?php endif; ?>
         </div>
+
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <select class="form-select" id="status" name="status">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+            <select class="form-select <?= isset($errors['status']) ? 'is-invalid' : '' ?>" 
+                    id="status" 
+                    name="status" 
+                    required>
+                <option value="active" <?= ($values['status'] ?? '') === 'active' ? 'selected' : '' ?>>Active</option>
+                <option value="inactive" <?= ($values['status'] ?? '') === 'inactive' ? 'selected' : '' ?>>Inactive</option>
             </select>
+            <?php if (isset($errors['status'])): ?>
+                <div class="invalid-feedback"><?= htmlspecialchars($errors['status']) ?></div>
+            <?php endif; ?>
+        </div>
 
         <button type="submit" class="btn btn-primary">Create Product</button>
     </form>

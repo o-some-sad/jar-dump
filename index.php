@@ -139,32 +139,49 @@ switch ($request) {
         break;
     case  '/admin/products/store':
         Auth::protect([Role::Admin]);
-        Auth::protect([Role::Admin]);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once __DIR__ . '/utils/productValidator.php';
+            
             try {
+                // Validate input data
+                [$isValid, $result] = validateProduct($_POST, $_FILES);
+                
+                if (!$isValid) {
+                    $_SESSION['validation_errors'] = $result;
+                    $_SESSION['validation_values'] = $_POST;
+                    header('Location: /admin/products/create');
+                    exit;
+                }
+
                 $controller = new ProductController($pdo);
-                //TODO: add validation
-                $validatedImage = $controller->handleImageUpload($_FILES['image']);
-                // dd($validatedImage);
-                $data = [
-                    'name' => $_POST['name'] ?? '',
-                    'category_id' => $_POST['category_id'] ?? '',
-                    'price' => $_POST['price'] ?? '',
-                    'quantity' => $_POST['quantity'] ?? '',
-                    'description' => $_POST['description'] ?? '',
-                    'image' => $validatedImage
-                ];
+                
+                // Handle image upload if present
+                $imagePath = null;
+                if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
+                    $imagePath = $controller->handleImageUpload($_FILES['image']);
+                }
+
+                // Merge validated data with image path
+                $data = array_merge($result, ['image' => $imagePath]);
+                
                 $controller->createProduct($data);
+                
                 $_SESSION['flash'] = [
                     'type' => 'success',
                     'message' => 'Product created successfully'
                 ];
+                
             } catch (Exception $e) {
+                error_log("Product creation error: " . $e->getMessage());
                 $_SESSION['flash'] = [
                     'type' => 'danger',
                     'message' => 'Error creating product: ' . $e->getMessage()
                 ];
+                
+                // Preserve form data on error
+                $_SESSION['validation_values'] = $_POST;
             }
+            
             header('Location: /admin/products');
             exit;
         }
