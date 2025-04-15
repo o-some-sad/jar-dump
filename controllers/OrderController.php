@@ -14,7 +14,7 @@ class OrderController
 
     public function getOrders()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM orders");
+        $stmt = $this->pdo->prepare("SELECT * FROM orders ORDER BY created_at desc");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -48,7 +48,7 @@ class OrderController
         return $stmt->execute([
             $data['product_id'],  
             $data['order_id'],    
-            $data['quantity']     
+            $data['quantity']
         ]);
     }
 
@@ -59,10 +59,31 @@ class OrderController
     }
 
     public function getLatestOrderItems($userId): array {
-        $stmt = $this->pdo->prepare("SELECT * from products where product_id in (SELECT product_id FROM order_items WHERE order_id in (SELECT order_id FROM orders WHERE user_id = ? ORDER BY created_at DESC))");
-        $stmt->execute([$userId]);
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result ?: []; //empy if no orders
+        try {
+            $latestOrder = $this->getLastOrderIdOfUser($userId);
+            if (!$latestOrder) {
+                return [];
+            }
+            
+            
+            $stmt = $this->pdo->prepare("
+                SELECT p.*, oi.quantity 
+                FROM products p
+                JOIN order_items oi ON p.product_id = oi.product_id
+                WHERE oi.order_id = ?
+            ");
+            $stmt->execute([$latestOrder['order_id']]);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error getting latest order items: " . $e->getMessage());
+            return [];
+        }
     }
 
+    public function getOrderItemsByOrderId($orderId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM order_items WHERE order_id =?");
+        $stmt->execute([$orderId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

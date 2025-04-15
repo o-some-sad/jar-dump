@@ -10,7 +10,7 @@ $products = $productController->getProducts();
 $user = $_SESSION['user'];
 // dd($user['name']);
 $latestOrders = $orderController->getLatestOrderItems($user['user_id']);
-dd($latestOrders);
+// dd($latestOrders);
 // Initialize session data if needed
 if (!isset($_SESSION['selection'])) {
     $_SESSION['selection'] = [];
@@ -81,6 +81,37 @@ require_once __DIR__ . "/../controllers/user.controller.php";
             </div>
         <?php endif; ?>
 
+        <!-- latest order items section goes here -->
+        <div class="col-md-12 mb-4">
+                <h3 class="mb-3">Your Latest Order</h3>
+                <?php if (!empty($latestOrders)): ?>
+                    <div class="row row-cols-1 row-cols-md-4 g-4">
+                        <?php foreach ($latestOrders as $item): ?>
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="<?= htmlspecialchars($item['image']) ?>" 
+                                         class="card-img-top" 
+                                         alt="<?= htmlspecialchars($item['name']) ?>"
+                                         style="height: 150px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?= htmlspecialchars($item['name']) ?></h5>
+                                        <p class="card-text">
+                                            Quantity: <?= htmlspecialchars($item['quantity']) ?><br>
+                                            Price: EGP <?= htmlspecialchars(number_format($item['price'], 2)) ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-info">
+                        No previous orders found.
+                    </div>
+                <?php endif; ?>
+            </div>
+
+
         <div class="row">
             <!-- Left Section - Order Details -->
             <div class="col-md-5">
@@ -114,7 +145,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                     </div>
                 </div>
 
-                <form method="POST" action="/admin/order/store" id="orderForm" @submit="prepareSubmission">
+                <form method="POST" action="/user/order/store" id="orderForm" @submit="prepareSubmission">
                     <!-- Notes -->
                     <div class="mb-3">
                         <label for="notes" class="form-label">Notes</label>
@@ -181,7 +212,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                 selection: [], //selected products
                 notes: '', //for the entire order
                 room: '1', //just an initial val
-                selectedUser: '<?= $users[0]['user_id'] ?? '' ?>', //REMOVE and replace with last order
+                selectedUser: '<?= $user['user_id'] ?? '' ?>', //REMOVE and replace with last order
                 
                 
                 get totalPrice() {
