@@ -21,18 +21,18 @@ $validationResult = [
     )
 ];
 
-    $values = handleValidationResult($validationResult, "/dashboard/users/new");
+    $values = handleValidationResult($validationResult, "/admin/users/new");
     $passwordMatch = matchingPasswords($values['user_password'], $values['user_confirm_password']);
     if (!$passwordMatch[0]) {
         $errors = ['password_match' => $passwordMatch[1]]; // Add to errors array
-        redirectWithValidationResult($values, $errors, "/dashboard/users/new");
+        redirectWithValidationResult($values, $errors, "/admin/users/new");
     }
     $imageValidation = validateFile('user_profile_pic', ['jpg', 'png', 'jpeg']);
     if (!$imageValidation[0]) {
         $errors = ['user_profile_pic' => $imageValidation[1]];
         // $_SESSION['file_info'] = $_FILES['user_profile_pic']['name'];
         // $_SESSION['file_infoo']= strtolower(pathinfo($_FILES['user_profile_pic']['name'], PATHINFO_EXTENSION));
-        redirectWithValidationResult($values, $errors, "/dashboard/users/new");
+        redirectWithValidationResult($values, $errors, "/admin/users/new");
     }
     $path = "NOT AVAILABLE";
     //  MOVING THE IMG TO A PERM. DIR. INSTEAD OF TMP.
@@ -48,6 +48,11 @@ $validationResult = [
     $_SESSION['file_info'] = $values['user_password'];
     unset($values['user_confirm_password']);
     $userController = new UserController();
-    $userController->insertIntoUsers($values,$path);
+    try{
+        $userController->insertIntoUsers($values,$path);
+    } catch (Exception $e) {
+        $errors = ['user_email' => $e->getMessage()];
+        redirectWithValidationResult($values, $errors, "/admin/users/new");
+    }
     // UserController::insertIntoUsers($values);
     // IF THERE'S NO VALDATION ERRORS, THEN CALL INSERT METHOD IN USER CONTROLLER^^ //

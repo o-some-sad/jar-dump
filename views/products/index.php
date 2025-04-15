@@ -29,9 +29,13 @@
             <tr>
                 <td><?= $product['product_id'] ?></td>
                 <td>
-                    <img src="<?= htmlspecialchars($product['image_url']) ?>" 
-                         alt="<?= htmlspecialchars($product['name']) ?>" 
-                         class="img-thumbnail" style="max-width: 50px">
+                
+            <img src="<?= htmlspecialchars($product['image_url']) ?>"
+                         alt="<?= htmlspecialchars($product['name']) ?>"
+                         class="img-thumbnail" style="max-width: 50px"> 
+                
+
+        
                 </td>
                 <td><?= htmlspecialchars($product['name']) ?></td>
                 <td>$<?= number_format($product['price'], 2) ?></td>

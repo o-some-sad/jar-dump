@@ -10,6 +10,14 @@ class ProductController {
         $this->pdo = $pdo;
     }
 
+    static public function getProductsCount(){
+        $pdo = createPDO();
+        $stmt = $pdo->prepare("select count(*) as total from products where deleted_at is null");
+        $stmt->execute();
+        $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        return $total;
+    }
+   
     public function getProducts() {
         try {
             $stmt = $this->pdo->prepare("
@@ -39,6 +47,24 @@ class ProductController {
         } catch (PDOException $e) {
             error_log("Error fetching products: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function getProductIdByName($name){
+        try {
+            $stmt = $this->pdo->prepare("SELECT product_id FROM products WHERE name = :name");
+            $stmt->execute(['name' => $name]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$product) {
+                throw new Exception("Product not found");
+            }
+
+            return $product['product_id']; 
+        }
+        catch (PDOException $e) {
+            error_log("Error fetching product: ". $e->getMessage());
+            return null; 
         }
     }
 

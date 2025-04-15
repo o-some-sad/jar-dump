@@ -11,22 +11,22 @@ $validation = [
     'role' => validate("role", custom: fn($value) => in_array($value, ["admin", "user"]) ? [true, $value] : [false, "Role must be admin or user"])
 ];
 
-$values = handleValidationResult($validation, "/dashboard/users");
+$values = handleValidationResult($validation, "/admin/users");
 
 if($userID == $currentUser['user_id'] && $values['role'] != $currentUser['role']){
-    redirectWithValidationResult($values, ['_' => "You can't change your role"], "/dashboard/users");
+    redirectWithValidationResult($values, ['_' => "You can't change your role"], "/admin/users");
     exit;
 }
 
 try {
     $result = UserController::updateUserFromDashboard($userID, $values);
     if (!$result) {
-        redirectWithValidationResult($values, ['_' => "Failed to update user"], "/dashboard/users");
+        redirectWithValidationResult($values, ['_' => "Failed to update user"], "/admin/users");
         exit;
     }
-    redirect("/dashboard/users");
+    redirect("/admin/users");
     exit;
 } catch (Exception $e) {
-    redirectWithValidationResult($values, ['_' => $e->getMessage()], "/dashboard/users");
+    redirectWithValidationResult($values, ['_' => $e->getMessage()], "/admin/users");
     exit;
 }

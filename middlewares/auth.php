@@ -28,7 +28,12 @@ class Auth
     static private array | null $current_user = null;
     static private function  preventAccess(string $message = "Your'e not allowed here"){
         echo $message;
-        dd($_SESSION);
+        exit;
+    }
+
+    static private function redirectToLogin(){
+        $currentPath = $_SERVER['REQUEST_URI'];
+        redirect("/login?return=$currentPath");
         exit;
     }
 
@@ -43,11 +48,15 @@ class Auth
     static function protect(array | null $roles = null)
     {
         if(!static::isAuthed()){
-            static::preventAccess();
+            // static::preventAccess();
+            static::redirectToLogin();
         }
         if(!isset($_SESSION['user'])){
-            //TODO: log out the user without panic
-            throw new Exception('The \'user\' object is not found', 1);
+            //// TODO: log out the user without panic
+            // throw new Exception('The \'user\' object is not found', 1);
+            unset($_SESSION['logged_in']);
+            unset($_SESSION['user']);
+            static::redirectToLogin();
         }
         
         $user = $_SESSION['user'];

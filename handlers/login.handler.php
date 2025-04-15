@@ -2,6 +2,14 @@
 require_once "utils/validator.php";
 require_once "utils/pdo.php";
 require_once "utils/http.php";
+// session_start();
+// if(isset($_SESSION) && $_SESSION['login']){
+//     echo "Already authed";
+//     header("location:homepage.php");
+// }
+// else{
+//     echo "Not authed";
+// }
 
 $validationResult = [
     'email' => validate(
@@ -10,17 +18,17 @@ $validationResult = [
     ),
     'password' => validate(
         "password",
-        custom: fn($pass)=>[strlen($pass) >= 8, "Password needs to be at least 8 characters"]
+        custom: fn($pass) => [strlen($pass) >= 8, "Password needs to be at least 8 characters"]
     )
 ];
 
 $values = handleValidationResult($validationResult, "/login");
 
 
-try{
-    if(Auth::isAuthed()){
+try {
+    if (Auth::isAuthed()) {
         //already authed, just redirect
-        redirect($_GET["to"] ?? "/");
+        redirect($_GET["to"] ?? "/homepage");
         exit;
     }
     $pdo = createPDO();
@@ -30,11 +38,11 @@ try{
         'email' => $values['email']
     ]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    if(!$user){
+    if (!$user) {
         redirectWithValidationResult($values, ['_' => "Email or password is incorrect"], "/login");
         exit;
     }
-    if(!password_verify($values['password'], $user['password'])){
+    if (!password_verify($values['password'], $user['password'])) {
         redirectWithValidationResult($values, ['_' => "Email or password is incorrect"], "/login");
         exit;
     }
@@ -42,9 +50,8 @@ try{
     unset($user['password']);
     $_SESSION['logged_in'] = true;
     $_SESSION['user'] = $user;
-    redirect($_GET["to"] ?? "/");
+    redirect($_GET["to"] ?? "/homepage");
     exit;
-}
-catch(PDOException $e){
+} catch (PDOException $e) {
     dd($e);
 }

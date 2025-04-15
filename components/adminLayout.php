@@ -5,6 +5,7 @@ require_once __DIR__ . '/../utils/pdo.php';
 // Check admin authentication (simple version)
 $isAdmin = isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin';
 
+
 // if (!$isAdmin) {
 //     header('Location: /login');
 //     exit();
@@ -74,7 +75,7 @@ $isAdmin = isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin';
             unset($_SESSION['flash_type']);
             ?>
         <?php endif; ?>
-
+        
         <?= $content ?? '' ?>
     </div>
 

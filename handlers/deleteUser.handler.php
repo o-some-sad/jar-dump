@@ -6,18 +6,18 @@ $currentUser = Auth::getUser();
 $userID = $_SERVER['params']['id'];
 
 if($userID == $currentUser['user_id']){
-    redirectWithValidationResult([], ['_' => "You can't delete yourself"], "/dashboard/users");
+    redirectWithValidationResult([], ['_' => "You can't delete yourself"], "/admin/users");
     exit;
 }
 
 try{
     $update = UserController::deleteUser($userID);
     if(!$update){
-        redirectWithValidationResult([], ['_' => "Failed to delete user"], "/dashboard/users");
+        redirectWithValidationResult([], ['_' => "Failed to delete user"], "/admin/users");
         exit;
     }
-    redirect("/dashboard/users");
+    redirect("/admin/users");
 }catch(Exception $e){
-    redirectWithValidationResult([], ['_' => $e->getMessage()], "/dashboard/users");
+    redirectWithValidationResult([], ['_' => $e->getMessage()], "/admin/users");
     exit;
 }
