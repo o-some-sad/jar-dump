@@ -9,7 +9,7 @@ require_once "utils/common.php";
 $limit = 10;
 $currentPage = (int)(isset($_GET['page']) ? $_GET['page'] : 1) - 1;
 if ($currentPage < 0) {
-    redirect("/dashboard/users");
+    redirect("/admin/users");
 }
 $offset = $currentPage * $limit;
 $result = UserController::getAllUsers($offset, $limit);
@@ -19,7 +19,7 @@ $users = $result['data'];
 $total = $result['total'];
 $totalPages = ceil($total / $limit);
 if ($currentPage >= $totalPages) {
-    redirect("/dashboard/users");
+    redirect("/admin/users");
 }
 
 [$errors, $_] = getValidationReturn();
@@ -32,7 +32,7 @@ if ($currentPage >= $totalPages) {
 <section class="flex-grow-1 p-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>All users</h1>
-        <a href="/dashboard/users/new">Add user</a>
+        <a href="/admin/users/new">Add user</a>
     </div>
     <?php if (count($errors)): ?>
         <div class="alert alert-danger" role="alert">
@@ -60,7 +60,7 @@ if ($currentPage >= $totalPages) {
                 <?php foreach ($users as $row): ?>
                     <!-- thanks @aya for telling me about this foreach syntax  -->
                     <tr>
-                        <form id="editing_<?= $row['user_id'] ?>" action="/dashboard/users/<?= $row['user_id'] ?>" method="POST"></form>
+                        <form id="editing_<?= $row['user_id'] ?>" action="/admin/users/<?= $row['user_id'] ?>" method="POST"></form>
                         <td><?= $row['user_id'] ?></td>
                         <td>
                             <template x-if='editing === <?= $row['user_id'] ?>'>
@@ -90,7 +90,7 @@ if ($currentPage >= $totalPages) {
                             <template x-if='editing !== <?= $row['user_id'] ?>'>
                                 <button class="btn btn-primary" type='button' @click='editing = <?= $row['user_id'] ?>'>Edit</button>
                             </template>
-                            <form action="/dashboard/users/<?= $row['user_id'] ?>/delete" method="POST">
+                            <form action="/admin/users/<?= $row['user_id'] ?>/delete" method="POST">
                                 <button class="btn btn-danger" type='submit'>Delete</button>
                             </form>
                         </td>
@@ -102,7 +102,7 @@ if ($currentPage >= $totalPages) {
     <div class="d-flex justify-content-center">
         <div>
             <?php foreach (range(1, $totalPages) as $page): ?>
-                <a href="<?= $page != $currentPage + 1 ? "/dashboard/users?page=$page" : "#" ?>"><?= $page ?></a>
+                <a href="<?= $page != $currentPage + 1 ? "/admin/users?page=$page" : "#" ?>"><?= $page ?></a>
             <?php endforeach ?>
         </div>
     </div>

@@ -30,8 +30,8 @@ function adminLayout_open(string $title) {
     echo '<aside class="aside">';
         echo '<a href="/admin" data-title="Home"><i class="fa-solid fa-house"></i></a>';
         echo '<a href="/admin/products" data-title="Products"><i class="fa-solid fa-list"></i></a>';
-        echo '<a href="/admin/products" data-title="Orders"><i class="fa-solid fa-shopping-cart"></i></a>';
-        echo '<a href="/dashboard/users" data-title="Users"><i class="fas fa-users me-1"></i></a>';
+        echo '<a href="/admin/orders" data-title="Orders"><i class="fa-solid fa-shopping-cart"></i></a>';
+        echo '<a href="/admin/users" data-title="Users"><i class="fas fa-users me-1"></i></a>';
     echo '</aside>';
 }
 
