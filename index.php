@@ -84,6 +84,9 @@ switch ($request) {
         else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else notFound();
         break;
+    case '/orderHistory':
+        require __DIR__ . '/views/orders/orderHistory.php';
+        break;
     case '/admin/products':
 //         //         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
