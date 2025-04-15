@@ -103,3 +103,32 @@ main {
 
 
 [x-cloak] { display: none !important; }
+
+
+.error-wrapper {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.error-box {
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+.error-box .error-code {
+  font-size: 8rem;
+  font-weight: 800;
+  color: #0d6efd;
+}
+.error-box .error-message {
+  font-size: 1.25rem;
+  color: #6c757d;
+}
+.error-box .btn-home {
+  margin-top: 25px;
+}

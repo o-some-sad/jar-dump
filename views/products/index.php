@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . '/../../components/adminLayout.php'; ?>
+<?php require_once __DIR__ . '/../../components/adminLayoutRestored.php'; ?>
+
+<?= adminLayout_open("Products") ?>
 
 <div class="container py-4">
     <div class="d-flex justify-content-between mb-4">
@@ -26,28 +28,30 @@
         </thead>
         <tbody>
             <?php foreach ($products as $product): ?>
-            <tr>
-                <td><?= $product['product_id'] ?></td>
-                <td>
-                
-            <img src="<?= htmlspecialchars($product['image_url']) ?>"
-                         alt="<?= htmlspecialchars($product['name']) ?>"
-                         class="img-thumbnail" style="max-width: 50px"> 
-                
+                <tr>
+                    <td><?= $product['product_id'] ?></td>
+                    <td>
 
-        
-                </td>
-                <td><?= htmlspecialchars($product['name']) ?></td>
-                <td>$<?= number_format($product['price'], 2) ?></td>
-                <td><?= $product['quantity'] ?></td>
-                <td>
-                    <a href="/admin/products/edit/<?= $product['product_id'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="/admin/products/delete/<?= $product['product_id'] ?>" 
-                       class="btn btn-danger btn-sm" 
-                       onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>        
-                </td>
-            </tr>
+                        <img src="<?= htmlspecialchars($product['image_url']) ?>"
+                            alt="<?= htmlspecialchars($product['name']) ?>"
+                            class="img-thumbnail" style="max-width: 50px">
+
+
+
+                    </td>
+                    <td><?= htmlspecialchars($product['name']) ?></td>
+                    <td>$<?= number_format($product['price'], 2) ?></td>
+                    <td><?= $product['quantity'] ?></td>
+                    <td>
+                        <a href="/admin/products/edit/<?= $product['product_id'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="/admin/products/delete/<?= $product['product_id'] ?>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                    </td>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
+<?= adminLayout_close() ?>

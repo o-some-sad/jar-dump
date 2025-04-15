@@ -22,7 +22,7 @@ $method = $_SERVER["REQUEST_METHOD"];
 // loadEnv();
 //require_once "config.php";
 session_start();
-try  {
+try {
     //TODO: find a better way to do this
     require_once __DIR__ . '/utils/pdo.php';
     $pdo = createPDO();
@@ -50,23 +50,23 @@ function dashboardUserRoutes($request)
 }
 
 switch ($request) {
-        case '/': //done
-        case '':
+    case '/': //done
+    case '':
         Auth::protect();
         $user = Auth::getUser();
         if ($method == "GET" && $user['role'] == 'user') require __DIR__ . '/views/homepage.php';
         else if ($method == "GET" && $user['role'] == 'admin') redirect('/admin');
-        else if($method == 'POST') require __DIR__ . '/handlers/order.user.handler.php';
+        else if ($method == 'POST') require __DIR__ . '/handlers/order.user.handler.php';
         else notFound();
         break;
-    
+
 
 
     case '/login': //done
         if ($method == "GET") require __DIR__ . '/views/login.php';
         else notFound();
         break;
-    case '/auth/login': 
+    case '/auth/login':
         if ($method == "POST") require __DIR__ . '/handlers/login.handler.php';
         else notFound();
         break;
@@ -90,6 +90,10 @@ switch ($request) {
         else notFound();
         break;
 
+
+
+
+
     case '/admin/orders':
         Auth::protect([Role::Admin]);
         if ($method == "GET" || $method == "POST") require __DIR__. '/views/admin/order.status.php';
@@ -107,7 +111,7 @@ switch ($request) {
         require __DIR__ . '/views/orders/orderHistory.php';
         break;
     case '/admin/products':
-        //         //         Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         //         //         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
         $products = $controller->getProducts();
@@ -117,11 +121,11 @@ switch ($request) {
         Auth::protect([Role::Admin]);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once __DIR__ . '/utils/productValidator.php';
-            
+
             try {
                 // Validate input data
                 [$isValid, $result] = validateProduct($_POST, $_FILES);
-                
+
                 if (!$isValid) {
                     $_SESSION['validation_errors'] = $result;
                     $_SESSION['validation_values'] = $_POST;
@@ -130,7 +134,7 @@ switch ($request) {
                 }
 
                 $controller = new ProductController($pdo);
-                
+
                 // Handle image upload if present
                 $imagePath = null;
                 if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
@@ -139,25 +143,24 @@ switch ($request) {
 
                 // Merge validated data with image path
                 $data = array_merge($result, ['image' => $imagePath]);
-                
+
                 $controller->createProduct($data);
-                
+
                 $_SESSION['flash'] = [
                     'type' => 'success',
                     'message' => 'Product created successfully'
                 ];
-                
             } catch (Exception $e) {
                 error_log("Product creation error: " . $e->getMessage());
                 $_SESSION['flash'] = [
                     'type' => 'danger',
                     'message' => 'Error creating product: ' . $e->getMessage()
                 ];
-                
+
                 // Preserve form data on error
                 $_SESSION['validation_values'] = $_POST;
             }
-            
+
             header('Location: /admin/products');
             exit;
         }
@@ -289,7 +292,7 @@ switch ($request) {
         break;
     case '/admin/order/store':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-             Auth::protect([Role::Admin]);
+            Auth::protect([Role::Admin]);
             require __DIR__ . '/handlers/order.handler.php';
         }
         break;
@@ -301,7 +304,7 @@ switch ($request) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ob_clean();
             header('Content-Type: application/json');
-            
+
             try {
                 $input = json_decode(file_get_contents('php://input'), true);
                 if (!$input || !isset($input['name'])) {
@@ -318,7 +321,6 @@ switch ($request) {
                 }
 
                 echo json_encode($result);
-
             } catch (Exception $e) {
                 error_log("Category creation error: " . $e->getMessage());
                 http_response_code(400);
