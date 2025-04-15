@@ -301,11 +301,6 @@ switch ($request) {
         Auth::protect([Role::Admin]);
         require __DIR__ . '/views/admin/checks.php';
         break;
-        break;
-    case '/admin/checks':
-        Auth::protect([Role::Admin]);
-        require __DIR__ . '/views/admin/checks.php';
-        break;
     case '/admin/categories/store':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ob_clean();
@@ -341,12 +336,6 @@ switch ($request) {
         break;
     default:
         dashboardUserRoutes($request);
-        // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
-        // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
-        //     $_REQUEST["PARAMS"] = array_slice($match, 1);
-        //     require __DIR__ . "/views/edit.php";
-        //     break;
-        // }
         notFound();
         break;
 }
