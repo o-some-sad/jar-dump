@@ -212,7 +212,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                 selection: [], //selected products
                 notes: '', //for the entire order
                 room: '1', //just an initial val
-                selectedUser: '<?= $users[0]['user_id'] ?? '' ?>', //REMOVE and replace with last order
+                selectedUser: '<?= $user['user_id'] ?? '' ?>', //REMOVE and replace with last order
                 
                 
                 get totalPrice() {
