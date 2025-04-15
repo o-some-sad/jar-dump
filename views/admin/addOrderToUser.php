@@ -130,6 +130,7 @@ $users = UserController::getAllUsers(0, 10, true)['data'];
         <!-- Products Grid -->
         <div class="d-flex flex-wrap gap-3 justify-content-start">
             <?php foreach ($products as $index => $product): ?>
+                <?php if ($product['quantity'] <= 0): continue; endif;?>
                 <div class="cup shadow-sm p-2" 
                      :class="{ 'selected': isSelected(<?= $index ?>) }"
                      @click="toggleProduct(<?= htmlspecialchars(json_encode($product)) ?>)">

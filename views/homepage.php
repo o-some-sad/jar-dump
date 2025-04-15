@@ -192,12 +192,14 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                 <!-- Products Grid -->
                 <div class="d-flex flex-wrap gap-3 justify-content-start">
                     <?php foreach ($products as $index => $product): ?>
+                        <?php if ($product['quantity'] > 0):?>
                         <div class="cup shadow-sm p-2" 
                              :class="{ 'selected': isSelected(<?= $index ?>) }"
                              @click="toggleProduct(<?= htmlspecialchars(json_encode($product)) ?>)">
                             <span class="product-name fw-bold"><?= htmlspecialchars($product['name']) ?></span>
                             <span class="product-price text-muted">EGP <?= htmlspecialchars(number_format($product['price'], 2)) ?></span>
                         </div>
+                        <?php endif;?>
                     <?php endforeach; ?>
                 </div>
             </div>

@@ -102,13 +102,13 @@ switch ($request) {
         break;
 
     case '/admin/orders':
-        // Auth::protect([Role::Admin]);
+        Auth::protect([Role::Admin]);
         if ($method == "GET" || $method == "POST") require __DIR__. '/views/orders/order.status.php';
         else notFound();
         break;
 
     case '/admin/order/status/store':
-        Auth::protect([Role::Admin]);
+        // Auth::protect([Role::Admin]);
         if ($method == "POST") require __DIR__ . '/handlers/order.status.handler.php';
         else notFound();
         break;
@@ -258,6 +258,7 @@ switch ($request) {
         }
         break;
     case '/admin/order':
+        Auth::protect([Role::Admin]);
         require __DIR__ . '/views/admin/addOrderToUser.php';
         break;
     case '/admin/order/store':
