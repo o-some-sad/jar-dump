@@ -181,8 +181,8 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                             :class="{ 'selected': isSelected(<?= $index ?>) }"
                             @click="toggleProduct(<?= htmlspecialchars(json_encode($product)) ?>)">
                            <span class="product-name fw-bold"><?= htmlspecialchars($product['name']) ?></span>
-                           <span class="product-price text-muted">EGP <?= htmlspecialchars(number_format($product['price'], 2)) ?></span>
                            <img src="<?=htmlspecialchars($product['image'])  ?>" width=80>
+                           <span class="product-price text-muted">EGP <?= htmlspecialchars(number_format($product['price'], 2)) ?></span>
                        </div>
                        <?php endif;?>
                    <?php endforeach; ?>

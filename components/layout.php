@@ -12,6 +12,7 @@ function layout_open(string $title) {
     //write custom head tags here
     head_close();
     echo '<body>';
+    require_once "components/header.php";
 }
 
 function layout_close(){

@@ -5,7 +5,7 @@
   font-family: sans-serif;
 }
 
-body{
+body {
   background: red;
   min-height: 100svh;
   display: flex;
@@ -16,14 +16,16 @@ body{
 main {
   flex: 1;
   background: #eee;
-  &, & *{
+
+  &,
+  & * {
     transition: 325ms;
   }
 }
 
 
 
- .aside{
+.aside {
   background: #323232;
   color: white;
   text-decoration: none;
@@ -32,7 +34,8 @@ main {
   gap: 1rem;
   padding: 1rem;
   transition: 325ms;
-  a{
+
+  a {
     position: relative;
     text-decoration: none;
     color: white;
@@ -46,15 +49,17 @@ main {
     border-radius: 0.5rem;
     aspect-ratio: 1;
     font-size: 1.2rem;
-    &[data-title]:hover{
-      &::after{
+
+    &[data-title]:hover {
+      &::after {
         opacity: 1;
         left: calc(100% + 0.5rem);
         filter: blur(0);
         pointer-events: all;
       }
     }
-    &::after{
+
+    &::after {
       position: absolute;
       top: 50%;
       left: 100%;
@@ -72,11 +77,11 @@ main {
     }
 
   }
- }
+}
 
- .cup {
-  width: 70px;
-  height: 90px;
+.cup {
+  /* width: 70px;
+  height: 90px; */
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -89,20 +94,25 @@ main {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .cup:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .selected {
   background-color: #d4edda;
   border-color: #c3e6cb;
 }
+
 .selection-item:hover {
   background-color: #f8f9fa;
 }
 
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+  display: none !important;
+}
 
 
 .error-wrapper {
@@ -112,23 +122,61 @@ main {
   align-items: center;
   justify-content: center;
 }
+
 .error-box {
   text-align: center;
   max-width: 500px;
   padding: 40px;
   border-radius: 16px;
   background: white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
+
 .error-box .error-code {
   font-size: 8rem;
   font-weight: 800;
   color: #0d6efd;
 }
+
 .error-box .error-message {
   font-size: 1.25rem;
   color: #6c757d;
 }
+
 .error-box .btn-home {
   margin-top: 25px;
+}
+
+.order-card {
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.order-completed {
+  opacity: 0.7;
+}
+
+.order-item {
+  border-left: 3px solid #6c757d;
+  padding-left: 10px;
+  margin-bottom: 8px;
+}
+
+.status-badge {
+  font-size: 0.85rem;
+}
+
+.status-processing {
+  background-color: #ffc107;
+}
+
+.status-out_for_delivery {
+  background-color: #17a2b8;
+}
+
+.status-done {
+  background-color: #28a745;
 }

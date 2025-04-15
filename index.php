@@ -171,13 +171,11 @@ switch ($request) {
 
     case '/admin/products/create':
         Auth::protect([Role::Admin]);
-        Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
         $categories = $controller->getAllCategories();
         require __DIR__ . '/views/products/create.php';
         break;
     case (preg_match('/^\/admin\/products\/edit\/(\d+)$/', $request, $matches) ? true : false):
-        Auth::protect([Role::Admin]);
         Auth::protect([Role::Admin]);
         try {
             $id = (int)$matches[1];
@@ -209,7 +207,6 @@ switch ($request) {
         break;
     case (bool)preg_match('/^\/admin\/products\/delete\/(\d+)$/', $request, $matches):
         Auth::protect([Role::Admin]);
-        Auth::protect([Role::Admin]);
         try {
             $id = (int)$matches[1];
             $controller = new ProductController($pdo);
@@ -234,7 +231,6 @@ switch ($request) {
         exit;
         break;
     case '/admin/products/delete':
-        Auth::protect([Role::Admin]);
         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
         $id = $_REQUEST['id'] ?? null;
