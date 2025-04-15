@@ -48,6 +48,11 @@ $validationResult = [
     $_SESSION['file_info'] = $values['user_password'];
     unset($values['user_confirm_password']);
     $userController = new UserController();
-    $userController->insertIntoUsers($values,$path);
+    try{
+        $userController->insertIntoUsers($values,$path);
+    } catch (Exception $e) {
+        $errors = ['user_email' => $e->getMessage()];
+        redirectWithValidationResult($values, $errors, "/admin/users/new");
+    }
     // UserController::insertIntoUsers($values);
     // IF THERE'S NO VALDATION ERRORS, THEN CALL INSERT METHOD IN USER CONTROLLER^^ //

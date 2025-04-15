@@ -3,9 +3,11 @@
 require_once "utils/pdo.php";
 require_once "utils/common.php";
 
-class UserController{
+class UserController
+{
 
-    static public function getUsersCount(bool $includeDeleted = false){
+    static public function getUsersCount(bool $includeDeleted = false)
+    {
         $pdo = createPDO();
         $whereClause = $includeDeleted ? "" : "where deleted_at is null";
         $totalStmt = $pdo->prepare("select count(*) as total from users {$whereClause} order by user_id");
@@ -16,8 +18,9 @@ class UserController{
     }
 
 
-    static public function getAllUsers(int $offset = 0, int $limit = 10, bool $includeDeleted = false){
-        try{
+    static public function getAllUsers(int $offset = 0, int $limit = 10, bool $includeDeleted = false)
+    {
+        try {
             $pdo = createPDO();
             $whereClause = $includeDeleted ? "" : "where deleted_at is null";
             $usersStmt = $pdo->prepare("select * from users {$whereClause} order by created_at limit :offset, :limit");
@@ -27,24 +30,23 @@ class UserController{
             $data = ($usersStmt->fetchAll(PDO::FETCH_ASSOC));
 
             $total = static::getUsersCount($includeDeleted);
-            
+
             $pdo = null;
             return compact("data", "total");
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             //TODO: handle this
             dd($e);
         }
     }
 
-    static public function getUserById($id){
-    }
+    static public function getUserById($id) {}
 
 
-    static public function deleteUser($id){
+    static public function deleteUser($id)
+    {
         $pdo = createPDO();
         $transactionStarted = $pdo->beginTransaction();
-        if(!$transactionStarted){
+        if (!$transactionStarted) {
             throw new Exception("Transaction Failed");
         }
         $updateStmt = $pdo->prepare("update users set deleted_at = now() where user_id = :user_id and deleted_at is null");
@@ -55,10 +57,11 @@ class UserController{
         return $updateStmt->rowCount();
     }
 
-    static public function updateUserFromDashboard($id, array $data){
+    static public function updateUserFromDashboard($id, array $data)
+    {
         $pdo = createPDO();
         $transactionStarted = $pdo->beginTransaction();
-        if(!$transactionStarted){
+        if (!$transactionStarted) {
             throw new Exception("Transaction Failed");
         }
         $safeData = pick($data, ['name', 'role']);
@@ -72,29 +75,37 @@ class UserController{
         return $updateStmt->rowCount();
     }
 
-    public function insertIntoUsers(array $values, $path=null)
-        {
-            $pdo = createPDO();
-            if (!$pdo) {
-                return [false, "Failed to connect to database."];
-            }
-                $stmt = $pdo->prepare("
+    public function insertIntoUsers(array $values, $path = null)
+    {
+        $pdo = createPDO();
+        if (!$pdo) {
+            return [false, "Failed to connect to database."];
+        }
+        try {
+            $stmt = $pdo->prepare("
                     INSERT INTO `users` (name, email, password, role, profile_picture)
                     VALUES (:name, :email, :password, :role, :profile_picture)
                 ");
-                $stmt->bindParam(':name', $values['user_name']);
-                // **CHECK IF $values['user_email'] EXISTS IN THE DB,
-                // **IF YES THEN $_SESSION['ERROR']=['Duplicate_Email'=>'This email is already used.']
-                $stmt->bindParam(':email', $values['user_email']);
-                $stmt->bindParam(':password', $values['user_password']);
-                $stmt->bindValue(':role', 'user');
-                $stmt->bindParam(':profile_picture', $path);
-                $stmt->execute();
-                $pdo=null;
+            $stmt->bindParam(':name', $values['user_name']);
+            // **CHECK IF $values['user_email'] EXISTS IN THE DB,
+            // **IF YES THEN $_SESSION['ERROR']=['Duplicate_Email'=>'This email is already used.']
+            $stmt->bindParam(':email', $values['user_email']);
+            $stmt->bindParam(':password', $values['user_password']);
+            $stmt->bindValue(':role', 'user');
+            $stmt->bindParam(':profile_picture', $path);
+            $stmt->execute();
+            $pdo = null;
+        } catch (Exception $e) {
+            if ($e instanceof PDOException && $e->getCode() === "23000" && str_contains($e->getMessage(), "users.email")) {
+                throw new Exception("This email is already used", 1);
+            }
+            throw $e;
         }
+    }
 
-    public function getUserByOrderId($orderId) {
-        $pdo = createPDO(); 
+    public function getUserByOrderId($orderId)
+    {
+        $pdo = createPDO();
         $stmt = $pdo->prepare("select * from users where user_id = (select user_id from orders where order_id = ?)");
         $stmt->execute([$orderId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
