@@ -9,20 +9,29 @@ class CategoryController {
 
     public function createCategory($name) {
         try {
-            // Validate input
-            if (empty(trim($name))) {
-                throw new Exception('Category name is required');
+            $name = trim($name);
+            
+            if (empty($name)) {
+                return [
+                    'success' => false,
+                    'message' => 'Category name is required'
+                ];
             }
 
-            // Check for duplicate category
+            // Check for duplicate
             $stmt = $this->pdo->prepare("
-                SELECT COUNT(*) FROM category 
-                WHERE name = :name
+                SELECT category_id, name 
+                FROM category 
+                WHERE LOWER(name) = LOWER(:name)
             ");
-            $stmt->execute(['name' => trim($name)]);
+            $stmt->execute(['name' => $name]);
             
-            if ($stmt->fetchColumn() > 0) {
-                throw new Exception('Category already exists');
+            if ($stmt->fetch()) {
+                return [
+                    'success' => false,
+                    'error' => 'duplicate',
+                    'message' => 'Category already exists'
+                ];
             }
 
             // Create category
@@ -31,54 +40,40 @@ class CategoryController {
                 VALUES (:name)
             ");
             
-            if (!$stmt->execute(['name' => trim($name)])) {
-                throw new Exception('Failed to create category');
+            if ($stmt->execute(['name' => $name])) {
+                return [
+                    'success' => true,
+                    'category_id' => $this->pdo->lastInsertId(),
+                    'message' => 'Category created successfully'
+                ];
             }
 
-            return $this->pdo->lastInsertId();
+            return [
+                'success' => false,
+                'message' => 'Failed to create category'
+            ];
 
         } catch (PDOException $e) {
             error_log("Database error in createCategory: " . $e->getMessage());
-            throw new Exception('Database error while creating category');
+            return [
+                'success' => false,
+                'message' => 'Database error while creating category'
+            ];
         }
     }
 
     public function getAllCategories() {
         try {
-            $stmt = $this->pdo->prepare("SELECT * FROM category ORDER BY name");
+            $stmt = $this->pdo->prepare("
+                SELECT category_id, name 
+                FROM category 
+                ORDER BY name
+            ");
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error fetching categories: " . $e->getMessage());
             return [];
-        }
-    }
-
-    public function getCategoryById($id) {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT * FROM category 
-                WHERE category_id = :id AND deleted_at IS NULL
-            ");
-            $stmt->execute(['id' => (int)$id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Error fetching category: " . $e->getMessage());
-            return null;
-        }
-    }
-
-    public function deleteCategory($id) {
-        try {
-            $stmt = $this->pdo->prepare("
-                UPDATE category 
-                SET deleted_at = NOW() 
-                WHERE category_id = :id
-            ");
-            return $stmt->execute(['id' => (int)$id]);
-        } catch (PDOException $e) {
-            error_log("Error deleting category: " . $e->getMessage());
-            throw new Exception('Failed to delete category');
         }
     }
 }

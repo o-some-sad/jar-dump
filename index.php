@@ -12,6 +12,7 @@ require_once "utils/http.php";
 require_once "utils/env.php";
 require_once "controllers/user.controller.php";
 require_once __DIR__ . '/controllers/ProductController.php';
+require_once __DIR__ . '/controllers/CategoryController.php';
 
 
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -308,6 +309,39 @@ switch ($request) {
     case '/admin/checks':
         Auth::protect([Role::Admin]);
         require __DIR__ . '/views/admin/checks.php';
+        break;
+    case '/admin/categories/store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            ob_clean();
+            header('Content-Type: application/json');
+            
+            try {
+                $input = json_decode(file_get_contents('php://input'), true);
+                if (!$input || !isset($input['name'])) {
+                    throw new Exception('Invalid input data');
+                }
+
+                $controller = new CategoryController($pdo);
+                $result = $controller->createCategory($input['name']);
+
+                if (!$result['success'] && isset($result['error']) && $result['error'] === 'duplicate') {
+                    http_response_code(409);
+                } elseif (!$result['success']) {
+                    http_response_code(400);
+                }
+
+                echo json_encode($result);
+
+            } catch (Exception $e) {
+                error_log("Category creation error: " . $e->getMessage());
+                http_response_code(400);
+                echo json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
+            }
+            exit;
+        }
         break;
     default:
         dashboardUserRoutes($request);
