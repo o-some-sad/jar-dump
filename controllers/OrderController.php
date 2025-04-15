@@ -31,4 +31,8 @@ class OrderController
         $stmt = $this->pdo->prepare("INSERT INTO orders (user_id, product_id, quantity, total_price) VALUES (?, ?, ?, ?)");
         return $stmt->execute([$data['user_id'], $data['product_id'], $data['quantity'], $data['total_price']]);
     }
+    public function createOrderItem($data){
+        $stmt = $this->pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity) VALUES (?,?,?)");
+        return $stmt->execute([$data['order_id'], $data['product_id'], $data['quantity']]);
+    }
 }
