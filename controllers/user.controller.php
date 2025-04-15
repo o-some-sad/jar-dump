@@ -37,6 +37,10 @@ class UserController{
         }
     }
 
+    static public function getUserById($id){
+    }
+
+
     static public function deleteUser($id){
         $pdo = createPDO();
         $transactionStarted = $pdo->beginTransaction();

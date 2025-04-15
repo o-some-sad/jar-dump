@@ -51,4 +51,18 @@ class OrderController
             $data['quantity']     
         ]);
     }
+
+    private function getLastOrderIdOfUser($userId){
+        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 1");
+        $stmt->execute([$userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getLatestOrderItems($userId): array {
+        $stmt = $this->pdo->prepare("SELECT * from products where product_id in (SELECT product_id FROM order_items WHERE order_id in (SELECT order_id FROM orders WHERE user_id = ? ORDER BY created_at DESC))");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result ?: []; //empy if no orders
+    }
+
 }
