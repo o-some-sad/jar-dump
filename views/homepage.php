@@ -73,7 +73,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                        <?php foreach ($latestOrders as $item): ?>
                            <div class="col">
                                <div class="card h-100">
-                                   <img src="<?= empty($item['image']) ? '/static/no-image.png' : htmlspecialchars($item['image'])  ?>" 
+                                   <img src="<?=htmlspecialchars($item['image'])  ?>" 
                                         class="card-img-top" 
                                         alt="<?= htmlspecialchars($item['name']) ?>"
                                         style="height: 150px; object-fit: cover;">
@@ -182,6 +182,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                             @click="toggleProduct(<?= htmlspecialchars(json_encode($product)) ?>)">
                            <span class="product-name fw-bold"><?= htmlspecialchars($product['name']) ?></span>
                            <span class="product-price text-muted">EGP <?= htmlspecialchars(number_format($product['price'], 2)) ?></span>
+                           <img src="<?=htmlspecialchars($product['image'])  ?>" width=80>
                        </div>
                        <?php endif;?>
                    <?php endforeach; ?>

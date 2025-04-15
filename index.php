@@ -90,13 +90,9 @@ switch ($request) {
         else notFound();
         break;
 
-
-   
-       
-
     case '/admin/orders':
         Auth::protect([Role::Admin]);
-        if ($method == "GET" || $method == "POST") require __DIR__. '/views/orders/order.status.php';
+        if ($method == "GET" || $method == "POST") require __DIR__. '/views/admin/order.status.php';
         else notFound();
         break;
 
