@@ -64,6 +64,12 @@ switch ($request) {
         // Auth::protect();
         require __DIR__ . '/views/index.php';
         break;
+
+    case '/homepage':
+            if ($method == "GET") require __DIR__. '/views/homepage.php';
+            else notFound();
+            break;
+
     case '/login':
         if ($method == "GET") require __DIR__ . '/views/login.php';
         else notFound();

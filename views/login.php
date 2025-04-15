@@ -3,8 +3,11 @@ require_once "components/layout.php";
 require_once "utils/validator.php";
 
 [$errors, $values] = getValidationReturn();
-
-
+// session_start();
+if(isset($_SESSION) && $_SESSION['logged_in']){
+    echo "Already authed";
+    header("location:../homepage");
+}
 ?>
 
 <?= layout_open("Login") ?>
