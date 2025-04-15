@@ -50,6 +50,7 @@ $validationResult = [
     $userController = new UserController();
     try{
         $userController->insertIntoUsers($values,$path);
+        redirect("/admin/users");
     } catch (Exception $e) {
         $errors = ['user_email' => $e->getMessage()];
         redirectWithValidationResult($values, $errors, "/admin/users/new");

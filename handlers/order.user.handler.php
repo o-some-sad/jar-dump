@@ -82,6 +82,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     // redirect if admin
     // header('Location: /admin/order');
     //redirect if user
-    header('Location: /homepage');
+    header('Location: /');
     exit;
 }

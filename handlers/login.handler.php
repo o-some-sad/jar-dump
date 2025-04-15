@@ -28,7 +28,7 @@ $values = handleValidationResult($validationResult, "/login");
 try {
     if (Auth::isAuthed()) {
         //already authed, just redirect
-        redirect($_GET["to"] ?? "/homepage");
+        redirect($_GET["to"] ?? "/");
         exit;
     }
     $pdo = createPDO();
@@ -50,7 +50,7 @@ try {
     unset($user['password']);
     $_SESSION['logged_in'] = true;
     $_SESSION['user'] = $user;
-    redirect($_GET["to"] ?? "/homepage");
+    redirect($_GET["to"] ?? "/");
     exit;
 } catch (PDOException $e) {
     dd($e);

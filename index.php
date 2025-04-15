@@ -50,31 +50,23 @@ function dashboardUserRoutes($request)
 }
 
 switch ($request) {
-    case 'test':
-        require __DIR__ . 'views/test.php';
-        break;
-    case '/':
-
-    case '':
-        // Auth::protect();
-        require __DIR__ . '/views/index.php';
-        break;
-
-    case '/homepage':
+        case '/': //done
+        case '':
         Auth::protect();
-        if ($method == "GET") require __DIR__ . '/views/homepage.php';
+        $user = Auth::getUser();
+        if ($method == "GET" && $user['role'] == 'user') require __DIR__ . '/views/homepage.php';
+        else if ($method == "GET" && $user['role'] == 'admin') redirect('/admin');
+        else if($method == 'POST') require __DIR__ . '/handlers/order.user.handler.php';
         else notFound();
         break;
-        Auth::protect();
-        if ($method == "GET") require __DIR__ . '/views/homepage.php';
-        else notFound();
-        break;
+    
 
-    case '/login':
+
+    case '/login': //done
         if ($method == "GET") require __DIR__ . '/views/login.php';
         else notFound();
         break;
-    case '/auth/login':
+    case '/auth/login': 
         if ($method == "POST") require __DIR__ . '/handlers/login.handler.php';
         else notFound();
         break;
@@ -85,43 +77,31 @@ switch ($request) {
     case '/admin':
         Auth::protect([Role::Admin]);
         if ($method != "GET") notFound();
-        if ($method != "GET") notFound();
         require __DIR__ . '/views/admin/index.php';
         break;
-    case '/admin/users':
+    case '/admin/users': //done
         Auth::protect([Role::Admin]);
         require __DIR__ . '/views/admin/users.php';
         break;
-    case '/admin/users/new':
+    case '/admin/users/new': //done
         Auth::protect([Role::Admin]);
-        Auth::protect([Role::Admin]);
-        // echo "<h1>user registration will be here</h1>";
         if ($method == "GET") require __DIR__ . '/views/admin/createUser.php';
-        // else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else notFound();
         break;
 
 
-    case '/user/order/store':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Auth::protect([Role::User]);
-            require __DIR__ . '/handlers/order.user.handler.php';
-        }
-        break;
+   
        
 
     case '/admin/orders':
         Auth::protect([Role::Admin]);
         if ($method == "GET" || $method == "POST") require __DIR__. '/views/orders/order.status.php';
-        if ($method == "GET" || $method == "POST") require __DIR__. '/views/orders/order.status.php';
         else notFound();
         break;
 
 
-    case '/admin/order/status/store':
-        // Auth::protect([Role::Admin]);
-        if ($method == "POST") require __DIR__ . '/handlers/order.status.handler.php';
+    case '/admin/orders/status':
         Auth::protect([Role::Admin]);
         if ($method == "POST") require __DIR__ . '/handlers/order.status.handler.php';
         else notFound();
@@ -274,7 +254,6 @@ switch ($request) {
         header('Location: /admin/products');
         exit;
     case '/admin/products/update':
-        Auth::protect([Role::Admin]);
         Auth::protect([Role::Admin]);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {

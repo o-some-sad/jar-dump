@@ -114,7 +114,7 @@ foreach ($orders as $order) {
                             </div>
                             <div class="col-md-3">
                                 <h5 class="card-title">Actions</h5>
-                                <form method="POST" action="order/status/store">
+                                <form method="POST" action="/admin/orders/status">
                                     <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($order['order_id']); ?>">
                                     
                                     <?php if ($order['status'] === 'processing'): ?>

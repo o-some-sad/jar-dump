@@ -40,7 +40,7 @@ class OrderController
         $data['status'] ?? 'processing',  
         $data['room_no'],
         $data['ext'] ?? 1,          
-        $data['notes'] ?? "default notes"         
+        $data['notes'] ?? "no notes"         
     ]);
     }
     public function createOrderItem($data) {

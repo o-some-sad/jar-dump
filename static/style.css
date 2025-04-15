@@ -74,4 +74,32 @@ main {
   }
  }
 
+ .cup {
+  width: 70px;
+  height: 90px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cup:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.selected {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+.selection-item:hover {
+  background-color: #f8f9fa;
+}
+
+
 [x-cloak] { display: none !important; }

@@ -77,7 +77,7 @@ $users = UserController::getAllUsers(0, 10, true)['data'];
             </div>
         </div>
 
-        <form method="POST" action="/user/order/store" id="orderForm" @submit="prepareSubmission">
+        <form method="POST" action="/" id="orderForm" @submit="prepareSubmission">
             <!-- Notes -->
             <div class="mb-3">
                 <label for="notes" class="form-label">Notes</label>
