@@ -8,6 +8,7 @@ function layout_open(string $title) {
     <html lang="en">';
     head_open();
     echo "<title>$title</title>";
+    echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">';
     //write custom head tags here
     head_close();
     echo '<body>';

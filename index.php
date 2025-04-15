@@ -28,7 +28,7 @@ try{
     error_log("Database connection failed: " . $e->getMessage());
     die("Database connection failed.");
 }
-require_once __DIR__ . '/components/adminLayout.php';
+// require_once __DIR__ . '/components/adminLayout.php';
 
 function dashboardUserRoutes($request)
 {
@@ -71,6 +71,11 @@ switch ($request) {
     case '/auth/logout':
         if ($method == "POST") require __DIR__ . '/handlers/logout.handler.php';
         else notFound();
+        break;
+    case '/admin':
+        Auth::protect([Role::Admin]);
+        if($method != "GET") notFound();
+        require __DIR__ . '/views/admin/index.php';
         break;
     case '/dashboard/users':
         Auth::protect([Role::Admin]);

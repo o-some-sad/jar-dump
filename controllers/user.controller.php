@@ -4,6 +4,18 @@ require_once "utils/pdo.php";
 require_once "utils/common.php";
 
 class UserController{
+
+    static public function getUsersCount(bool $includeDeleted = false){
+        $pdo = createPDO();
+        $whereClause = $includeDeleted ? "" : "where deleted_at is null";
+        $totalStmt = $pdo->prepare("select count(*) as total from users {$whereClause} order by user_id");
+        $totalStmt->execute();
+        $total = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        $pdo = null;
+        return $total;
+    }
+
+
     static public function getAllUsers(int $offset = 0, int $limit = 10, bool $includeDeleted = false){
         try{
             $pdo = createPDO();
@@ -14,9 +26,7 @@ class UserController{
             $usersStmt->execute();
             $data = ($usersStmt->fetchAll(PDO::FETCH_ASSOC));
 
-            $totalStmt = $pdo->prepare("select count(*) as total from users order by user_id");
-            $totalStmt->execute();
-            $total = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
+            $total = static::getUsersCount($includeDeleted);
             
             $pdo = null;
             return compact("data", "total");
