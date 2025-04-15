@@ -2,6 +2,14 @@
 require_once "utils/validator.php";
 require_once "utils/pdo.php";
 require_once "utils/http.php";
+// session_start();
+// if(isset($_SESSION) && $_SESSION['login']){
+//     echo "Already authed";
+//     header("location:homepage.php");
+// }
+// else{
+//     echo "Not authed";
+// }
 
 $validationResult = [
     'email' => validate(
@@ -20,7 +28,7 @@ $values = handleValidationResult($validationResult, "/login");
 try {
     if (Auth::isAuthed()) {
         //already authed, just redirect
-        redirect($_GET["return"] ?? "/");
+        redirect($_GET["to"] ?? "/homepage");
         exit;
     }
     $pdo = createPDO();
@@ -42,7 +50,7 @@ try {
     unset($user['password']);
     $_SESSION['logged_in'] = true;
     $_SESSION['user'] = $user;
-    redirect($_GET["return"] ?? "/");
+    redirect($_GET["to"] ?? "/homepage");
     exit;
 } catch (PDOException $e) {
     dd($e);
