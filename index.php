@@ -67,6 +67,7 @@ switch ($request) {
         break;
 
     case '/homepage':
+            Auth::protect();
             if ($method == "GET") require __DIR__. '/views/homepage.php';
             else notFound();
             break;
