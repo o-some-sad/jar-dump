@@ -89,7 +89,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                         <?php foreach ($latestOrders as $item): ?>
                             <div class="col">
                                 <div class="card h-100">
-                                    <img src="<?= htmlspecialchars($item['image']) ?>" 
+                                    <img src="<?= empty($item['image']) ? '/static/no-image.png' : htmlspecialchars($item['image'])  ?>" 
                                          class="card-img-top" 
                                          alt="<?= htmlspecialchars($item['name']) ?>"
                                          style="height: 150px; object-fit: cover;">

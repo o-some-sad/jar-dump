@@ -116,10 +116,22 @@ foreach ($orders as $order) {
                                 <h5 class="card-title">Actions</h5>
                                 <form method="POST" action="order/status/store">
                                     <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($order['order_id']); ?>">
-                                    <input type="hidden" name="status" value="out_for_delivery">
-                                    <button type="submit" class="btn btn-info text-white w-100" <?php if ($order['status'] === 'done') echo 'disabled'; ?>>
-                                        <i class="bi bi-truck me-1"></i> Deliver
-                                    </button>
+                                    
+                                    <?php if ($order['status'] === 'processing'): ?>
+                                        <input type="hidden" name="status" value="out_for_delivery">
+                                        <button type="submit" class="btn btn-info text-white w-100">
+                                            <i class="bi bi-truck me-1"></i> Deliver
+                                        </button>
+                                    <?php elseif ($order['status'] === 'out_for_delivery'): ?>
+                                        <input type="hidden" name="status" value="done">
+                                        <button type="submit" class="btn btn-success text-white w-100">
+                                            <i class="bi bi-check-circle me-1"></i> Complete
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="button" class="btn btn-secondary w-100" disabled>
+                                            <i class="bi bi-check-circle-fill me-1"></i> Completed
+                                        </button>
+                                    <?php endif; ?>
                                 </form>
                             </div>
                         </div>
