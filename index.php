@@ -55,9 +55,13 @@ function dashboardUserRoutes($request)
 }
 
 switch ($request) {
+    case 'test':
+        require __DIR__ . 'views/test.php';
+        break;
     case '/':
+
     case '':
-        Auth::protect();
+        // Auth::protect();
         require __DIR__ . '/views/index.php';
         break;
     case '/login':
@@ -77,7 +81,7 @@ switch ($request) {
         require __DIR__ . '/views/dashboard/users.php';
         break;
     case '/dashboard/users/new':
-        Auth::protect([Role::Admin]);
+        // Auth::protect([Role::Admin]);
         // echo "<h1>user registration will be here</h1>";
         if ($method == "GET") require __DIR__ . '/views/dashboard/createUser.php';
         // else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
@@ -118,6 +122,7 @@ switch ($request) {
             exit;
         }
         break;
+    
         
     case '/admin/products/create':
         // Auth::protect([Role::Admin]);
@@ -228,7 +233,14 @@ switch ($request) {
             exit;
         }
         break;
-                                                         
+    case '/admin/order':
+        require __DIR__ . '/views/dashboard/addOrderToUser.php';
+        break;
+    case '/admin/order/store':
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require __DIR__ . '/handlers/order.handler.php';
+        }
+        break;                             
     default:
         dashboardUserRoutes($request);
 // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {
