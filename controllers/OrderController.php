@@ -64,8 +64,6 @@ class OrderController
             if (!$latestOrder) {
                 return [];
             }
-            
-            
             $stmt = $this->pdo->prepare("
                 SELECT p.*, oi.quantity 
                 FROM products p
@@ -82,8 +80,16 @@ class OrderController
     }
 
     public function getOrderItemsByOrderId($orderId) {
-        $stmt = $this->pdo->prepare("SELECT * FROM order_items WHERE order_id =?");
+        $stmt = $this->pdo->prepare("
+                SELECT p.*, oi.quantity 
+                FROM products p
+                JOIN order_items oi ON p.product_id = oi.product_id
+                WHERE oi.order_id = ?
+            ");
         $stmt->execute([$orderId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+
 }
