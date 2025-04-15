@@ -92,4 +92,11 @@ class UserController{
                 $stmt->execute();
                 $pdo=null;
         }
+
+    public function getUserByOrderId($orderId) {
+        $pdo = createPDO(); 
+        $stmt = $pdo->prepare("select * from users where user_id = (select user_id from orders where order_id = ?)");
+        $stmt->execute([$orderId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

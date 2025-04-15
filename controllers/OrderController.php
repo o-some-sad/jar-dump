@@ -90,6 +90,11 @@ class OrderController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function updateOrderStatus($orderId, $status) {
+        $stmt = $this->pdo->prepare("UPDATE orders SET status = ? WHERE order_id = ?");
+        return $stmt->execute([$status, $orderId]);
+    }
+
 
 
 }

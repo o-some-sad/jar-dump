@@ -106,6 +106,12 @@ switch ($request) {
         if ($method == "GET") require __DIR__. '/views/orders/order.status.php';
         else notFound();
         break;
+    
+    case '/admin/order/status/store':
+        // Auth::protect([Role::Admin]);
+        if ($method == "POST") require __DIR__. '/handlers/order.status.handler.php';
+        else notFound();
+        break;
 
     case '/admin/products':
 //         //         Auth::protect([Role::Admin]);
