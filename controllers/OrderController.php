@@ -14,7 +14,7 @@ class OrderController
 
     public function getOrders()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM orders");
+        $stmt = $this->pdo->prepare("SELECT * FROM orders ORDER BY created_at desc");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -79,5 +79,11 @@ class OrderController
             error_log("Error getting latest order items: " . $e->getMessage());
             return [];
         }
+    }
+
+    public function getOrderItemsByOrderId($orderId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM order_items WHERE order_id =?");
+        $stmt->execute([$orderId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

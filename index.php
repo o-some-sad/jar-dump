@@ -101,6 +101,12 @@ switch ($request) {
         }
         break;   
 
+    case '/admin/orders':
+        // Auth::protect([Role::Admin]);
+        if ($method == "GET") require __DIR__. '/views/orders/order.status.php';
+        else notFound();
+        break;
+
     case '/admin/products':
 //         //         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);
