@@ -100,7 +100,7 @@
                 <input type="hidden" name="viewid" value="<?= $orderInfo['order_id'] ?>">
                 <button name="viewbtn" type="submit"
                     class="group relative inline-block text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-300/50">
-                    <span class="absolute inset-0 border-2 border-gray-300/90 group-hover:border-blue-400"></span>
+                    <span class="absolute inset-0 center border-4 border-gray-300/90 group-hover:border-blue-400"></span>
                     <span class="hover:scale-105 transition-all duration-300 ease-in-out text-md block border-2 border-gray-300 bg-gradient-to-br from-blue-500 to-blue-600 px-8 py-2 transition-all duration-200 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-blue-500 group-active:translate-x-0 group-active:translate-y-0">
                         <?= ($selectedOrderId == $orderInfo['order_id']) ? '-' : '+' ?>
                     </span>
@@ -138,8 +138,8 @@
         
         <?php if ($selectedOrderId == $orderInfo['order_id']): ?>
           <?php
-$orderContent = OrderController::getOrderContent($selectedOrderId);
-?>
+          $orderContent = OrderController::getOrderContent($selectedOrderId);
+          ?>
 <tr>
   <td colspan="5" class="px-0 py-0">
   <div class="px-4 py-2 bg-gray-50">
@@ -156,12 +156,12 @@ $orderContent = OrderController::getOrderContent($selectedOrderId);
             <th class="px-4 py-2">Total</th>
         </tr>
       </thead>
-      <tbody class="bg-white text-sm">
+      <tbody class="bg-white text-sm text-center">
         <?php foreach ($orderContent as $content): ?>
             <tr class="hover:bg-gray-100">
                 <!-- <td class="px-4 py-2"><?= $content['product_id'] ?></td> -->
                 <td class="px-4 py-2">
-                <img src="<?= $content['image'] ?>" alt="<?= $content['image'] ?>" class="w-16 h-16 object-contain"></td>                
+                <img src="<?= $content['image'] ?>" alt="<?= $content['image'] ?>" class="mx-auto w-16 h-16 flex items-center justify-center"></td>                
                 <td class="px-4 py-2"><?= $content['name'] ?></td>
                 <td class="px-4 py-2"><?= $content['quantity'] ?></td>
                 <td class="px-4 py-2">$<?= number_format($content['price'], 2) ?></td>
