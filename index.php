@@ -19,7 +19,7 @@ $request = rtrim($request, "/");
 $method = $_SERVER["REQUEST_METHOD"];
 
 // loadEnv();
-require_once "config.php";
+//require_once "config.php";
 session_start();
 try{
     //TODO: find a better way to do this
