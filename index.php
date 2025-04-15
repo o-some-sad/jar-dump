@@ -94,6 +94,13 @@ switch ($request) {
         else if ($method == "POST") require __DIR__ . '/handlers/user.register.handler.php';
         else notFound();
         break;
+    
+    case '/user/order/store':
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require __DIR__ . '/handlers/order.user.handler.php';
+        }
+        break;   
+
     case '/admin/products':
 //         //         Auth::protect([Role::Admin]);
         $controller = new ProductController($pdo);

@@ -78,6 +78,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Redirect back to the order page
-    header('Location: /admin/order');
+    // if($_SESSION[])
+    // redirect if admin
+    // header('Location: /admin/order');
+    //redirect if user
+    header('Location: /homepage');
     exit;
 }

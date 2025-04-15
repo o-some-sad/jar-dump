@@ -145,7 +145,7 @@ require_once __DIR__ . "/../controllers/user.controller.php";
                     </div>
                 </div>
 
-                <form method="POST" action="/admin/order/store" id="orderForm" @submit="prepareSubmission">
+                <form method="POST" action="/user/order/store" id="orderForm" @submit="prepareSubmission">
                     <!-- Notes -->
                     <div class="mb-3">
                         <label for="notes" class="form-label">Notes</label>
