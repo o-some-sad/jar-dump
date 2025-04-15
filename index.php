@@ -259,13 +259,21 @@ switch ($request) {
         }
         break;
     case '/admin/order':
+                Auth::protect([Role::Admin]);
+
         require __DIR__ . '/views/admin/addOrderToUser.php';
         break;
     case '/admin/order/store':
+                Auth::protect([Role::Admin]);
+
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             require __DIR__ . '/handlers/order.handler.php';
         }
-        break;                             
+        break;   
+    case '/admin/checks':
+                Auth::protect([Role::Admin]);
+        require __DIR__ . '/views/admin/checks.php';
+        break;                          
     default:
         dashboardUserRoutes($request);
 // if (preg_match("/^\/edit\/(\d+)$/", $request, $match)) {

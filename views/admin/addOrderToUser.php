@@ -2,15 +2,13 @@
 require_once __DIR__ . "/../../controllers/ProductController.php";
 require_once __DIR__ . "/../../controllers/OrderController.php";
 require_once __DIR__ . "/../../utils/pdo.php";
+require_once "components/adminLayoutRestored.php";
+
 $pdo = createPDO(); 
 $productController = new ProductController($pdo);
 $orderController = new OrderController($pdo);
 $products = $productController->getProducts();
 
-// $user = $_SESSION['user'];
-// dd($user['name']);
-// $latestOrders = $orderController->getLatestOrderItems($user['user_id']);
-// dd($latestOrders);
 // Initialize session data if needed
 if (!isset($_SESSION['selection'])) {
     $_SESSION['selection'] = [];
@@ -33,45 +31,10 @@ require_once __DIR__ . "/../../controllers/user.controller.php";
 $users = UserController::getAllUsers(0, 10, true)['data'];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Order System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        .cup {
-            width: 70px;
-            height: 90px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .cup:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .selected {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
-        .selection-item:hover {
-            background-color: #f8f9fa;
-        }
-        [x-cloak] { display: none !important; }
-    </style>
-</head>
-<body class="p-4">
+<?php adminLayout_open("Add Order to User") ?>
+<div class="p-4 flex-grow-1">
+
+
     <div class="container" x-data="orderApp()">
        
         <?php if ($flashMessage): ?>
@@ -256,5 +219,5 @@ $users = UserController::getAllUsers(0, 10, true)['data'];
     
     <!-- Bootstrap JS for alert dismissal -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    </div>
+    <?php adminLayout_close() ?>
