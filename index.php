@@ -22,6 +22,7 @@ $method = $_SERVER["REQUEST_METHOD"];
 require_once "config.php";
 session_start();
 try{
+    //TODO: find a better way to do this
     require_once __DIR__ . '/utils/pdo.php';
     $pdo = createPDO();
 } catch (Exception $e) {
